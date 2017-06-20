@@ -1,0 +1,25 @@
+﻿server:
+  port: 8888
+spring:
+  cloud:
+    config: 
+      server: 
+        s3:
+          searchPaths: '{application}'
+  profiles:
+    active: s3
+cloud: 
+  aws:
+    credentials: 
+      instanceProfile: false
+    stack:
+      auto: false
+
+management:
+  context-path: /management
+  security:
+    enabled: false
+  health:
+    s3:
+      uri: ${spring.cloud.config.server.s3.uri}
+

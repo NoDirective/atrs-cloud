@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><!--Converted at: Wed Sep 18 14:11:02 
+    JST 2013 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jp.co.ntt.atrs.domain.repository.messaging.MessageIdRepository">
+
+    <!-- メッセージID情報を全件取得 -->
+    <select id="findAll" parameterType="String" resultType="String">
+        SELECT
+        id
+        FROM
+        message_id
+    </select>
+
+    <insert id="register" parameterType="String">
+        INSERT INTO
+        message_id
+        (
+        id
+        )
+        VALUES
+        (
+        #{messageId}
+        )
+    </insert>
+
+</mapper>

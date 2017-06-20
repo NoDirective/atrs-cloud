@@ -1,0 +1,46 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>atrs-model</artifactId>
+    <name>${project.artifactId}</name>
+    <packaging>jar</packaging>
+    <parent>
+        <groupId>jp.co.ntt.atrs.cloud.aws</groupId>
+        <artifactId>atrs-parent</artifactId>
+        <version>1.0.0.BETA</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+    <dependencies>
+        <dependency>
+            <groupId>org.terasoluna.gfw</groupId>
+            <artifactId>terasoluna-gfw-recommended-dependencies</artifactId>
+            <type>pom</type>
+        </dependency>
+    </dependencies>
+
+    <properties>
+        <project.root.basedir>${project.parent.basedir}</project.root.basedir>
+    </properties>
+
+</project>

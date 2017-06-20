@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:aop="http://www.springframework.org/schema/aop" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:aws-context="http://www.springframework.org/schema/cloud/aws/context"
+    xmlns:dynamodb="http://docs.socialsignin.org/schema/data/dynamodb"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+  http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+  http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+  http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+  http://www.springframework.org/schema/cloud/aws/context http://www.springframework.org/schema/cloud/aws/context/spring-cloud-aws-context.xsd
+  http://docs.socialsignin.org/schema/data/dynamodb http://docs.socialsignin.org/schema/data/dynamodb/spring-dynamodb.xsd">
+    <context:component-scan
+        base-package="jp.co.ntt.atrs.domain,jp.co.ntt.atrs.common" />
+    <tx:annotation-driven />
+
+    <aws-context:context-resource-loader />
+
+    <import resource="classpath:META-INF/spring/atrs-infra.xml" />
+    <import resource="classpath:/META-INF/spring/atrs-codelist.xml" />
+
+    <bean id="messageSource"
+        class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basenames">
+            <list>
+                <value>i18n/atrs-messages</value>
+                <value>i18n/atrs-fields</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="resultMessagesLoggingInterceptor"
+        class="org.terasoluna.gfw.common.exception.ResultMessagesLoggingInterceptor">
+        <property name="exceptionLogger" ref="exceptionLogger" />
+    </bean>
+
+    <bean id="shardAccountHelper"
+        class="jp.co.ntt.atrs.domain.common.shard.helper.ShardAccountHelper" />
+
+    <bean id="accountShardInterceptor"
+        class="jp.co.ntt.atrs.domain.common.shard.interceptor.AccountShardInterceptor">
+        <constructor-arg index="0"
+            ref="accountShardKeyRepository" />
+        <constructor-arg index="1" ref="shardAccountHelper" />
+        <constructor-arg index="2"
+            ref="dataSourceLookupKeyHolder" />
+    </bean>
+
+    <bean id="accountShardKeyRepository"
+        class="jp.co.ntt.atrs.domain.common.shard.repository.AccountShardKeyRepository" />
+
+    <bean id="dataSourceFactory"
+        class="jp.co.ntt.atrs.domain.common.shard.datasource.pool.TomcatDataSourceFactory" />
+
+    <bean id="routingDataSourceBuilder"
+        class="jp.co.ntt.atrs.domain.common.shard.datasource.RoutingDataSourceBuilder">
+        <constructor-arg index="0" ref="databaseProperties" />
+        <constructor-arg index="1"
+            ref="commonDatabaseProperties" />
+        <constructor-arg index="2" ref="dataSourceFactory" />
+    </bean>
+
+    <bean id="routingDataSource"
+        class="jp.co.ntt.atrs.domain.common.shard.datasource.RoutingDataSource">
+        <constructor-arg index="0"
+            ref="routingDataSourceBuilder" />
+        <constructor-arg index="1"
+            ref="dataSourceLookupKeyHolder" />
+    </bean>
+
+    <alias name="routingDataSource" alias="dataSource"/>
+
+    <bean id="shardKeyResolver"
+        class="jp.co.ntt.atrs.domain.common.shard.datasource.DataSourceKeyResolver">
+        <constructor-arg index="0" ref="databaseProperties" />
+    </bean>
+
+    <bean id="databaseProperties"
+        class="jp.co.ntt.atrs.domain.common.shard.datasource.model.DatabaseProperties" />
+
+    <bean id="commonDatabaseProperties"
+        class="jp.co.ntt.atrs.domain.common.shard.datasource.model.CommonDatabaseProperties" />
+
+    <bean id="dataSourceLookupKeyHolder"
+        class="jp.co.ntt.atrs.domain.common.shard.datasource.RoutingDataSourceLookupKeyHolder" />
+
+    <aop:config>
+        <aop:advisor advice-ref="resultMessagesLoggingInterceptor"
+            pointcut="@within(org.springframework.stereotype.Service)" />
+        <aop:advisor order="-1" advice-ref="accountShardInterceptor"
+            pointcut="@annotation(jp.co.ntt.atrs.domain.common.shard.annotation.ShardWithAccount)" />
+    </aop:config>
+
+    <bean id="amazonDynamoDB"
+        class="com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient">
+        <property name="endpoint" value="${cloud.aws.dynamodb.endpoint}" />
+    </bean>
+
+    <dynamodb:repositories
+        base-package="jp.co.ntt.atrs.domain.common.shard.repository"
+        amazon-dynamodb-ref="amazonDynamoDB" />
+
+    <bean id="messageSender" class="jp.co.ntt.atrs.domain.common.messaging.MessageSender" />
+
+    <bean id="messageIdGenerator"
+        class="jp.co.ntt.atrs.domain.common.messaging.MessageIdGenerator" />
+
+</beans>

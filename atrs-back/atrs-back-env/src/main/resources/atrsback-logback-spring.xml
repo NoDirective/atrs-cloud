@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE logback>
+<configuration>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern><![CDATA[date:%d{yyyy-MM-dd HH:mm:ss}\tthread:%thread\tmessageId:%X{messageId}\tlevel:%-5level\tlogger:%-48logger{48}\tmessage:%msg%n]]></pattern>
+        </encoder>
+    </appender>
+
+    <appender name="APPLICATION_LOG_FILE"
+        class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH:-log}/atrs-back-application.log</file>
+        <springProfile name="performance">
+            <rollingPolicy
+                class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${LOG_PATH:-log}/atrs-back-application-%d{yyyyMMddHH}.log</fileNamePattern>
+                <maxHistory>10</maxHistory>
+                <totalSizeCap>1GB</totalSizeCap>
+            </rollingPolicy>
+        </springProfile>
+        <springProfile name="!performance">
+            <rollingPolicy
+                class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${LOG_PATH:-log}/atrs-back-application-%d{yyyyMMdd}.log</fileNamePattern>
+                <maxHistory>7</maxHistory>
+            </rollingPolicy>
+        </springProfile>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern><![CDATA[date:%d{yyyy-MM-dd HH:mm:ss}\tthread:%thread\tmessageId:%X{messageId}\tlevel:%-5level\tlogger:%-48logger{48}\tmessage:%msg%n]]></pattern>
+        </encoder>
+    </appender>
+
+    <appender name="MONITORING_LOG_FILE"
+        class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH:-log}/atrs-back-monitoring.log</file>
+        <rollingPolicy
+            class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH:-log}/atrs-back-monitoring-%d{yyyyMMdd}.log</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern><![CDATA[date:%d{yyyy-MM-dd HH:mm:ss}\tmessageId:%X{messageId}\tlevel:%-5level\tmessage:%msg%n]]></pattern>
+        </encoder>
+    </appender>
+
+    <springProfile name="performance">
+        <root>
+            <appender-ref ref="APPLICATION_LOG_FILE" />
+        </root>
+    </springProfile>
+
+    <springProfile name="!performance">
+        <!-- Application Loggers -->
+        <logger name="jp.co.ntt.atrs">
+            <level value="debug" />
+        </logger>
+
+        <!-- TERASOLUNA -->
+        <logger name="org.terasoluna.gfw">
+            <level value="info" />
+        </logger>
+        <logger name="org.terasoluna.gfw.web.logging.TraceLoggingInterceptor">
+            <level value="trace" />
+        </logger>
+        <logger name="org.terasoluna.gfw.common.exception.ExceptionLogger">
+            <level value="info" />
+        </logger>
+        <logger
+            name="org.terasoluna.gfw.common.exception.ExceptionLogger.Monitoring"
+            additivity="false">
+            <level value="error" />
+            <appender-ref ref="MONITORING_LOG_FILE" />
+        </logger>
+
+        <!-- 3rdparty Loggers -->
+        <logger name="org.springframework">
+            <level value="warn" />
+        </logger>
+
+        <logger name="org.springframework.web.servlet">
+            <level value="info" />
+        </logger>
+
+        <logger
+            name="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+            <level value="debug" />
+        </logger>
+
+        <!-- only for development -->
+        <logger name="jdbc.resultsettable">
+            <level value="debug" />
+        </logger>
+        <root>
+            <level value="warn" />
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="APPLICATION_LOG_FILE" />
+        </root>
+    </springProfile>
+
+</configuration>

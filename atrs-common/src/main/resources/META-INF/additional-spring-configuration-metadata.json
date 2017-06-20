@@ -1,0 +1,7 @@
+{"properties": [
+  {
+    "name": "management.health.s3.uri",
+    "type": "java.lang.String",
+    "description": "A description for 'management.health.s3.uri'"
+  }
+]}

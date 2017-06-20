@@ -1,0 +1,5 @@
+# disable config server
+spring:
+  cloud:
+    config:
+      enabled: false

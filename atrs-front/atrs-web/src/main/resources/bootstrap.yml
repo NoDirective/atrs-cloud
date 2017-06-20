@@ -1,0 +1,14 @@
+spring:
+  cloud:
+    config:
+      fail-fast: true
+
+# JVM起動引数によりシステムプロパティとして指定する必要のあるConfigサーバ向けの設定値
+#
+# spring:
+#   cloud:
+#     config:
+#       uri: http://atrs-config:8888 (local上でなく本物のConfigサーバのアドレスに変更したい場合)
+#
+# JVM起動引数の設定例
+# -Dspring.cloud.config.uri=http://atrs-config:8888

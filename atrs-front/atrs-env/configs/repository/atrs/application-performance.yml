@@ -1,0 +1,89 @@
+﻿# for performance test environment on EC2
+
+cloud:
+  aws:
+    # AWS common
+    region:
+      auto: true
+    stack:
+      auto: false
+    # DynamoDB
+    dynamodb:
+      # DynamoDBは同一テーブル名を使用しているため、環境毎にエンドポイント、もしくはAWSアカウントを切り替える。
+      endpoint: https://dynamodb.ap-northeast-1.amazonaws.com
+    # SQS
+    sqs:
+      region: ap-northeast-1
+    # CloudWatch
+    cloudwatch:
+      region: ap-northeast-1
+
+# RDB(RDSを使用)
+database:
+  common:
+    data-source:
+      # 各DBの共通設定
+      driverClassName: org.postgresql.Driver
+      maxActive: 62
+      maxIdle: 62
+      minIdle: 62
+      initialSize: 62
+      maxWait: 5000
+      password: postgres
+      username: postgres
+      validationQuery: SELECT 1
+      testOnConnect: true
+      testWhileIdle: true
+      # Amazon failover の最大値
+      # 参考 [http://docs.aws.amazon.com/ja_jp/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html]
+      timeBetweenEvictionRunsMillis: 120000
+      removeAbandoned: true
+      removeAbandonedTimeout: 60
+  default:
+    schema:
+      name: default
+  data-sources:
+    - schema: default
+      url: jdbc:postgresql://cn-performance-db1.XXXX.ap-northeast-1.rds.amazonaws.com:5432/atrs?socketTimeout=120&connectTimeout=120
+    - schema: atrs1
+      url: jdbc:postgresql://cn-performance-db2.XXXX.ap-northeast-1.rds.amazonaws.com:5432/atrs?socketTimeout=120&connectTimeout=120
+    - schema: atrs2
+      url: jdbc:postgresql://cn-performance-db3.XXXX.ap-northeast-1.rds.amazonaws.com:5432/atrs?socketTimeout=120&connectTimeout=120
+
+# upload directories
+upload:
+  bucketName: XXXX.YYYY.ZZZZ
+  temporaryDirectory: tmp/
+  saveDirectory: save/
+
+# SQS queue name
+reservation:
+  notification:
+    # 環境毎にキューを切り替える。
+    queue: cn-performance-queue
+
+# static contents(CloudFrontを利用)
+content:
+  url: https://XXX.cloudfront.net
+
+# Logging
+logging:
+  path: /var/log/atrslogs
+  # Workaround for duplicated log files
+  config: classpath:atrs-logback-spring.xml
+  level:
+    root: warn
+
+# Redis(ElastiCacheのRedis Clusterを使用)
+spring:
+  redis:
+    cluster:
+      nodes:
+        - cn-int-redis-cls.XXXX.clustercfg.apne1.cache.amazonaws.com:6379
+    pool:
+      max-active: 137
+      max-idle: 137
+      max-wait: -1
+      min-idle: 137
+    listener:
+      concurrencyLimit: 2

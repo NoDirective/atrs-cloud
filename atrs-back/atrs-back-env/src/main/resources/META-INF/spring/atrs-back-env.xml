@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    ">
+
+    <bean id="dateFactory"
+        class="org.terasoluna.gfw.common.date.jodatime.DefaultJodaTimeDateFactory" />
+
+    <!-- !!注意!! bean定義と設定ファイル(application-xxx.yml)でプロパティの同期を取る必要あり -->
+    <bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource"
+        destroy-method="close">
+        <property name="driverClassName" value="${database.driverClassName}" />
+        <property name="url" value="${database.url}" />
+        <property name="username" value="${database.username}" />
+        <property name="password" value="${database.password}" />
+        <property name="defaultAutoCommit" value="false" />
+        <property name="maxActive" value="${cp.maxActive}" />
+        <property name="maxIdle" value="${cp.maxIdle}" />
+        <property name="initialSize" value="${cp.initialSize}" />
+        <property name="minIdle" value="${cp.minIdle}" />
+        <property name="maxWait" value="${cp.maxWait}" />
+        <property name="validationQuery" value="${cp.validationQuery}" />
+        <property name="testOnConnect" value="${cp.testOnConnect}" />
+        <property name="testWhileIdle" value="${cp.testWhileIdle}" />
+        <property name="timeBetweenEvictionRunsMillis" value="${cp.timeBetweenEvictionRunsMillis}" />
+        <property name="removeAbandoned" value="${cp.removeAbandoned}" />
+        <property name="removeAbandonedTimeout" value="${cp.removeAbandonedTimeout}" />
+    </bean>
+
+    <!-- REMOVE THIS LINE IF YOU USE JPA <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory" /> </bean>
+        REMOVE THIS LINE IF YOU USE JPA -->
+    <bean id="transactionManager"
+        class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <!-- Amazon SQS ConnectionFactory -->
+    <bean id="connectionFactory" class="com.amazon.sqs.javamessaging.SQSConnectionFactory"
+        factory-bean="connectionFactoryBuilder" factory-method="build" />
+
+    <bean id="connectionFactoryBuilder"
+        class="com.amazon.sqs.javamessaging.SQSConnectionFactory$Builder">
+        <property name="regionName" value="${cloud.aws.sqs.region}" />
+        <property name="awsCredentialsProvider" ref="credentialsProvider" />
+    </bean>
+</beans>
