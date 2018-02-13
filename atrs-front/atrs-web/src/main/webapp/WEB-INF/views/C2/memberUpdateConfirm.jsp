@@ -82,7 +82,13 @@
     <tr>
       <td>顔写真</td>
       <td>
-        <img src="data:image/jpeg;base64,${f:h(memberUpdateForm.memberForm.photoBase64)}" class="facePhoto">
+     <c:choose>
+       <c:when test="${!empty memberUpdateForm.memberForm.photoBase64}">
+         <img src="data:image/jpeg;base64,${f:h(memberUpdateForm.memberForm.photoBase64)}" class="facePhoto">
+       </c:when>
+       <c:when test="${empty memberUpdateForm.memberForm.photoBase64}">選択されていません。 </c:when>
+     </c:choose>
+        <!-- <img src="data:image/jpeg;base64,${f:h(memberUpdateForm.memberForm.photoBase64)}" class="facePhoto"> -->
       </td>
     </tr>
     <tr>

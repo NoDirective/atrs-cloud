@@ -189,7 +189,7 @@
       </td>
     </tr>
     <tr>
-      <th colspan="2"><Div Align="left">アップロードする顔写真（jpgファイル）を選択してください。</Div></th>
+      <th colspan="2"><Div Align="left">アップロードする顔写真（1MB以下のjpgファイル）を選択してください。</Div></th>
     </tr>
     <tr>
     　　　　<td class="requireLine">

@@ -1,15 +1,28 @@
 /*
- * Copyright(c) 2017 NTT Corporation.
+ * Copyright 2014-2017 NTT Corporation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
  */
 package jp.co.ntt.atrs.domain.common.masterdata;
 
-import jp.co.ntt.atrs.domain.common.masterdata.helper.FlightMasterHelper;
-import jp.co.ntt.atrs.domain.model.FlightMaster;
+import javax.inject.Inject;
 
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-import javax.inject.Inject;
+import jp.co.ntt.atrs.domain.common.masterdata.helper.FlightMasterHelper;
+import jp.co.ntt.atrs.domain.model.FlightMaster;
 
 /**
  * フライト基本情報を提供するクラス。
@@ -32,7 +45,7 @@ public class FlightMasterProvider {
      * @return フライト基本情報。該当するフライト基本情報がない場合はnull。
      */
     public FlightMaster getFlightMaster(String flightName) {
-        Assert.hasText(flightName);
+        Assert.hasText(flightName, "flightName must not be empty");
         return this.flightMasterHelper.findAll(CACHE_KEY).get(flightName);
     }
 

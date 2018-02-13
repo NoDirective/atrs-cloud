@@ -18,4 +18,20 @@
     <!-- MyBatisがマッパーを自動スキャンするパッケージを設定 -->
     <mybatis:scan base-package="jp.co.ntt.atrs.domain.repository" />
 
+    <!-- メッセージング設定 -->
+    <bean id="cachingConnectionFactory"
+        class="org.springframework.jms.connection.CachingConnectionFactory" primary="true">
+        <property name="targetConnectionFactory" ref="connectionFactory" />
+        <property name="sessionCacheSize" value="10" />
+    </bean>
+
+    <!-- Amazon SQS ConnectionFactory -->
+    <bean id="connectionFactory" class="com.amazon.sqs.javamessaging.SQSConnectionFactory"
+        factory-bean="connectionFactoryBuilder" factory-method="build" />
+
+    <bean id="connectionFactoryBuilder"
+        class="com.amazon.sqs.javamessaging.SQSConnectionFactory$Builder">
+        <property name="regionName" value="${cloud.aws.sqs.region}" />
+    </bean>
+
 </beans>

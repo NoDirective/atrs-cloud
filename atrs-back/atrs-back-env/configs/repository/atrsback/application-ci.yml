@@ -1,4 +1,4 @@
-﻿# for CI environment on EC2
+# for CI environment on EC2
 
 cloud:
   aws:
@@ -18,7 +18,6 @@ cloud:
       region: ap-northeast-1
 
 # RDB(RDSを使用)
-# urlは実際のものに置き換える必要がある
 database:
   url: jdbc:postgresql://atrs-ci-shard.XXXX.ap-northeast-1.rds.amazonaws.com:5432/atrs?socketTimeout=120&connectTimeout=120
   username: atrsuser
@@ -49,8 +48,8 @@ reservation:
     queue: RESERVATION_NOTICE_CI
     concurrency: 5-10
     mail:
-      # 実際のアドレスに置き換える必要あり
-      from: atrs-cloud@XXXX.YYYY.jp
+      from: xx@xx.xx.xx.xx
+      templateFile: reservation-mail.ftl
 
 # Logging
 logging:

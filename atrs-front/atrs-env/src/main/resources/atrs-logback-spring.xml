@@ -71,7 +71,6 @@
         <logger name="org.terasoluna.gfw.web.logging.TraceLoggingInterceptor">
             <level value="trace" />
         </logger>
-
         <logger
             name="org.terasoluna.gfw.common.exception.ExceptionLogger.Monitoring"
             additivity="false">

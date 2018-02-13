@@ -7,7 +7,7 @@
     <parent>
         <groupId>jp.co.ntt.atrs.cloud.aws</groupId>
         <artifactId>atrs-parent</artifactId>
-        <version>1.0.0.BETA</version>
+        <version>1.0.0.RELEASE</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <build>
@@ -73,8 +73,7 @@
             </activation>
             <properties>
                 <jvmargs.profiles></jvmargs.profiles>
-		<!-- dummy location -->
-                <jvmargs.location>-Dspring.cloud.config.server.s3.uri=s3://XXXX</jvmargs.location>
+                <jvmargs.location>-Dspring.cloud.config.server.s3.uri=s3://atrs.config.repo</jvmargs.location>
                 <jvmargs.region>-Dcloud.aws.region.static=ap-northeast-1</jvmargs.region>
                 <jvmargs.region.auto>-Dcloud.aws.region.auto=false</jvmargs.region.auto>
             </properties>

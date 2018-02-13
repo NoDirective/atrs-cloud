@@ -1,5 +1,18 @@
 /*
- * Copyright(c) 2017 NTT Corporation.
+ * Copyright 2014-2017 NTT Corporation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
  */
 package jp.co.ntt.atrs.app.c2;
 
@@ -27,7 +40,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.terasoluna.gfw.common.exception.BusinessException;
 
-import jp.co.ntt.atrs.app.c0.MemberForm.UploadFileCheck;
+import jp.co.ntt.atrs.app.c0.MemberForm.UploadFileNotRequired;
 import jp.co.ntt.atrs.app.c0.MemberForm.UploadFileUncheck;
 import jp.co.ntt.atrs.app.c0.MemberHelper;
 import jp.co.ntt.atrs.app.common.exception.BadRequestException;
@@ -176,7 +189,7 @@ public class MemberUpdateController {
      * @throws IllegalStateException
      */
     @RequestMapping(method = RequestMethod.POST, params = "confirm")
-    public String updateConfirm(@Validated({ UploadFileCheck.class,
+    public String updateConfirm(@Validated({ UploadFileNotRequired.class,
             Default.class }) MemberUpdateForm memberUpdateForm,
             BindingResult result, Principal principal, Model model) throws IllegalStateException, IOException {
 
@@ -200,23 +213,26 @@ public class MemberUpdateController {
             return updateRedo(memberUpdateForm, model);
         }
 
-        // ファイル一時保存
-        MultipartFile uploadFile = memberUpdateForm.getMemberForm().getPhoto();
-        String photoFileName = UUID.randomUUID().toString()
-                + FilenameUtils.getName(originalFilename);
-        try (InputStream inputStream = uploadFile.getInputStream()) {
-            s3Helper.fileUpload(inputStream, bucketName, tmpDirectory,
-                    photoFileName);
-        }
+        if (!originalFilename.equals("")) {
+            // ファイル一時保存
+            MultipartFile uploadFile = memberUpdateForm.getMemberForm()
+                    .getPhoto();
+            String photoFileName = UUID.randomUUID().toString() + FilenameUtils
+                    .getName(originalFilename);
+            try (InputStream inputStream = uploadFile.getInputStream()) {
+                s3Helper.fileUpload(inputStream, bucketName, tmpDirectory,
+                        photoFileName);
+            }
 
-        // ファイル名をformに設定
-        memberUpdateForm.getMemberForm().setPhotoFileName(photoFileName);
+            // ファイル名をformに設定
+            memberUpdateForm.getMemberForm().setPhotoFileName(photoFileName);
 
-        // 画像をエンコードしてFormに設定
-        try (InputStream photoFile = uploadFile.getInputStream()) {
-            memberUpdateForm.getMemberForm().setPhotoBase64(
-                    imageFileBase64Encoder.encodeBase64(photoFile,
-                            fileExtension));
+            // 画像をエンコードしてFormに設定
+            try (InputStream photoFile = uploadFile.getInputStream()) {
+                memberUpdateForm.getMemberForm().setPhotoBase64(
+                        imageFileBase64Encoder.encodeBase64(photoFile,
+                                fileExtension));
+            }
         }
 
         return "C2/memberUpdateConfirm";

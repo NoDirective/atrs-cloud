@@ -1,7 +1,44 @@
 /*
- * Copyright(c) 2017 NTT Corporation.
+ * Copyright 2014-2017 NTT Corporation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
  */
 package jp.co.ntt.atrs.domain.service.b1;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+import org.terasoluna.gfw.common.codelist.CodeList;
+import org.terasoluna.gfw.common.date.jodatime.JodaTimeDateFactory;
+import org.terasoluna.gfw.common.exception.BusinessException;
 
 import jp.co.ntt.atrs.domain.common.exception.AtrsBusinessException;
 import jp.co.ntt.atrs.domain.common.masterdata.BoardingClassProvider;
@@ -18,30 +55,6 @@ import jp.co.ntt.atrs.domain.model.Route;
 import jp.co.ntt.atrs.domain.repository.flight.FlightRepository;
 import jp.co.ntt.atrs.domain.repository.flight.VacantSeatSearchCriteriaDto;
 import jp.co.ntt.atrs.domain.service.b0.TicketSharedService;
-
-import org.joda.time.LocalDate;
-import org.joda.time.Days;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
-import org.terasoluna.gfw.common.codelist.CodeList;
-import org.terasoluna.gfw.common.date.jodatime.JodaTimeDateFactory;
-import org.terasoluna.gfw.common.exception.BusinessException;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-
-import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  * 空席照会サービス実装クラス。
@@ -107,8 +120,8 @@ public class TicketSearchServiceImpl implements TicketSearchService {
     public TicketSearchResultDto searchFlight(
             TicketSearchCriteriaDto searchCriteria, Pageable pageable) throws BusinessException {
         // 引数チェック
-        Assert.notNull(searchCriteria);
-        Assert.notNull(pageable);
+        Assert.notNull(searchCriteria, "searchCriteria must not be null");
+        Assert.notNull(pageable, "pageable must not be null");
 
         Date depDate = searchCriteria.getDepDate();
         String depTime = searchCriteria.getDepTime();
@@ -116,10 +129,10 @@ public class TicketSearchServiceImpl implements TicketSearchService {
         String depAirportCd = searchCriteria.getDepartureAirportCd();
         String arrAirportCd = searchCriteria.getArrivalAirportCd();
 
-        Assert.notNull(depDate);
-        Assert.notNull(boardingClassCd);
-        Assert.hasText(depAirportCd);
-        Assert.hasText(arrAirportCd);
+        Assert.notNull(depDate, "depDate must not be null");
+        Assert.notNull(boardingClassCd, "boardingClassCd must not be null");
+        Assert.hasText(depAirportCd, "depAirportCd must not be empty");
+        Assert.hasText(arrAirportCd, "arrAirportCd must not be empty");
 
         // 指定された出発空港・到着空港に該当する区間が存在するかどうかチェック
         Route route = routeProvider.getRouteByAirportCd(depAirportCd,

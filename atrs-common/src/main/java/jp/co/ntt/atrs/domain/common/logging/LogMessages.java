@@ -1,5 +1,18 @@
 /*
- * Copyright(c) 2017 NTT Corporation.
+ * Copyright 2014-2017 NTT Corporation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
  */
 package jp.co.ntt.atrs.domain.common.logging;
 
@@ -27,11 +40,6 @@ public enum LogMessages {
     E_AR_A0_L9003("e.ar.a0.L9003", "S3へのアクセスで例外が発生しました {0}"),
 
     /**
-     * 顔写真ファイルが不整合である事を通知するログメッセージ。
-     */
-    E_AR_A0_L9004("e.ar.a0.L9004", "顔写真ファイルの不整合 お客様番号[{0}]"),
-
-    /**
      * ルーティング用データソースの設定がない事を通知するログメッセージ。
      */
     E_AR_A0_L9005("e.ar.a0.L9005", "ルーティング用データソースの設定がされていません。"),
@@ -50,6 +58,21 @@ public enum LogMessages {
      * ルーティング用データソースの作成中に例外が発生した事を通知するログメッセージ。
      */
     E_AR_A0_L9008("e.ar.a0.L9008", "ルーティング用データソースの作成中に例外が発生しました。"),
+
+    /**
+     * 指定されたデータベースのインスタンスが存在しない事を通知するログメッセージ。
+     */
+    E_AR_A0_L9009("e.ar.a0.L9009", "指定されたデータベースのインスタンスが存在しません。Database ID= {0}"),
+
+    /**
+     * 指定されたプロパティキーが不正である事を通知するログメッセージ。
+     */
+    E_AR_A0_L9010("e.ar.a0.L9010", "指定されたプロパティキー[{0}]を指定する場合は、データソースファクトリを拡張して下さい。"),
+
+    /**
+     * 2重受信が発生した事を通知するログメッセージ。
+     */
+    W_AR_A0_L9001("w.ar.a0.L9001", "二重受信が発生しました。メッセージID= {0}"),
 
     /**
      * ログインが成功した事を通知するログメッセージ。

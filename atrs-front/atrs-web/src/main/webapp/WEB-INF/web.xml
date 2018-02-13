@@ -65,11 +65,11 @@
         <dispatcher>FORWARD</dispatcher>
     </filter-mapping>
 
-    <!-- FIXME tilesのincludeを使用した際にセッションがうまくセットできない問題への暫定対処 ( issue : https://github.com/spring-projects/spring-session/issues/571 
+     <!-- FIXME tilesのincludeを使用した際にセッションがうまくセットできない問題への暫定対処 ( issue : https://github.com/spring-projects/spring-session/issues/571
         ) -->
     <filter>
         <filter-name>sessionEnforcerFilter</filter-name>
-        <filter-class>jp.co.ntt.atrs.app.common.session.SessionEnforcerFilter</filter-class>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>sessionEnforcerFilter</filter-name>

@@ -29,7 +29,9 @@
     <!-- Spring JMS Messaging -->
     <jms:annotation-driven />
     <jms:listener-container factory-id="jmsListenerContainerFactory"
-        acknowledge="client" />
+        acknowledge="client"
+        error-handler="jmsErrorHandler"/>
+    <bean id="jmsErrorHandler" class="jp.co.ntt.atrs.app.common.handler.JmsErrorHandler"/>
 
     <!-- Message -->
     <bean id="messageSource"

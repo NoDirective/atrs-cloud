@@ -1,5 +1,18 @@
 /*
- * Copyright(c) 2017 NTT Corporation.
+ * Copyright 2014-2017 NTT Corporation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
  */
 package jp.co.ntt.atrs.config;
 
@@ -13,20 +26,20 @@ import org.springframework.cloud.config.server.environment.SearchPathLocator;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.util.Assert;
 
-import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.AmazonS3URI;
 import com.amazonaws.services.s3.transfer.MultipleFileDownload;
 import com.amazonaws.services.s3.transfer.TransferManager;
+import com.amazonaws.services.s3.transfer.TransferManagerBuilder;
 
 @ConfigurationProperties("spring.cloud.config.server.s3")
 public class S3EnvironmentRepository extends AbstractScmEnvironmentRepository
-                                                                             implements
-                                                                             EnvironmentRepository,
-                                                                             SearchPathLocator,
-                                                                             InitializingBean {
+                                     implements EnvironmentRepository,
+                                     SearchPathLocator, InitializingBean {
 
-    private static Log logger = LogFactory
-            .getLog(S3EnvironmentRepository.class);
+    private static Log logger = LogFactory.getLog(
+            S3EnvironmentRepository.class);
 
     public S3EnvironmentRepository(ConfigurableEnvironment environment) {
         super(environment);
@@ -36,12 +49,12 @@ public class S3EnvironmentRepository extends AbstractScmEnvironmentRepository
     public synchronized Locations getLocations(String application,
             String profile, String label) {
 
-        AmazonS3Client amazonS3Client = null;
+        AmazonS3 amazonS3 = AmazonS3ClientBuilder.defaultClient();
         TransferManager tm = null;
         try {
             String bucketName = new AmazonS3URI(getUri()).getBucket();
-            amazonS3Client = new AmazonS3Client();
-            tm = new TransferManager(amazonS3Client);
+            tm = TransferManagerBuilder.standard().withS3Client(amazonS3)
+                    .build();
             logger.info("local temp dir:" + getBasedir().getAbsolutePath());
             MultipleFileDownload download = tm.downloadDirectory(bucketName,
                     null, getBasedir());
@@ -52,10 +65,7 @@ public class S3EnvironmentRepository extends AbstractScmEnvironmentRepository
             throw new IllegalStateException("Cannot download s3", t);
         } finally {
             if (tm != null) {
-                tm.shutdownNow();
-            }
-            if (amazonS3Client != null) {
-                amazonS3Client.shutdown();
+                tm.shutdownNow(); // amazonS3もshutdown()される。
             }
 
         }
@@ -71,6 +81,5 @@ public class S3EnvironmentRepository extends AbstractScmEnvironmentRepository
         // S3 URIを検証するためにインスタンス化
         new AmazonS3URI(getUri());
     }
-
 
 }

@@ -19,7 +19,17 @@
     <!-- Messaging -->
     <bean id="duplicateMessageChecker"
         class="jp.co.ntt.atrs.domain.common.messaging.DuplicateMessageChecker" />
-    <bean id="atrsMailSender" class="jp.co.ntt.atrs.domain.common.mail.AtrsMailSender" />
+        
+    <!-- Mail -->
+    <bean id="mailSender"
+        class="jp.co.ntt.atrs.domain.common.mail.AtrsMailSender"/>
+
+    <!-- FreeMarker -->
+    <bean id="freemarkerConfiguration"
+        class="org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean">
+        <property name="templateLoaderPath" value="classpath:/META-INF/freemarker/" />
+        <property name="defaultEncoding" value="UTF-8" />
+    </bean>
 
     <!-- AOP. -->
     <bean id="resultMessagesLoggingInterceptor"

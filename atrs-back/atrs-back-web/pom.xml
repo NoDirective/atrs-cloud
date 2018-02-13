@@ -7,7 +7,7 @@
     <parent>
         <groupId>jp.co.ntt.atrs.cloud.aws</groupId>
         <artifactId>atrs-back</artifactId>
-        <version>1.0.0.BETA</version>
+        <version>1.0.0.RELEASE</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -75,6 +75,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-actuator</artifactId>
         </dependency>
+
         <!-- end spring boot specific settings -->
 
         <!-- == Begin Tomcat == -->
@@ -86,7 +87,7 @@
         </dependency>
 
         <!-- JavaEE/SE APIs -->
-        <!-- Required only for Tomcat. If run on other J2EE server, remove 
+        <!-- Required only for Tomcat. If run on other J2EE server, remove
             this dependency and use provided tag libraries. -->
         <dependency>
             <groupId>org.apache.taglibs</groupId>

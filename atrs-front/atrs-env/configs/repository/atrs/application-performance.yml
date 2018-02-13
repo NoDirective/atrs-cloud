@@ -1,4 +1,4 @@
-﻿# for performance test environment on EC2
+# for performance test environment on EC2
 
 cloud:
   aws:
@@ -9,8 +9,8 @@ cloud:
       auto: false
     # DynamoDB
     dynamodb:
-      # DynamoDBは同一テーブル名を使用しているため、環境毎にエンドポイント、もしくはAWSアカウントを切り替える。
-      endpoint: https://dynamodb.ap-northeast-1.amazonaws.com
+      # DynamoDBは同一テーブル名を使用しているため、環境毎にリージョン、もしくはAWSアカウントを切り替える。
+      region: ap-northeast-1
     # SQS
     sqs:
       region: ap-northeast-1
@@ -20,6 +20,8 @@ cloud:
 
 # RDB(RDSを使用)
 database:
+  # RDSのリージョン設定
+  rdsRegion: ap-northeast-1
   common:
     data-source:
       # 各DBの共通設定
@@ -44,7 +46,8 @@ database:
       name: default
   data-sources:
     - schema: default
-      url: jdbc:postgresql://cn-performance-db1.XXXX.ap-northeast-1.rds.amazonaws.com:5432/atrs?socketTimeout=120&connectTimeout=120
+      dbInstanceIdentifier: cn-performance-db1
+      driverUrlOption: socketTimeout=120&connectTimeout=120
     - schema: atrs1
       url: jdbc:postgresql://cn-performance-db2.XXXX.ap-northeast-1.rds.amazonaws.com:5432/atrs?socketTimeout=120&connectTimeout=120
     - schema: atrs2
@@ -52,7 +55,7 @@ database:
 
 # upload directories
 upload:
-  bucketName: XXXX.YYYY.ZZZZ
+  bucketName: atrs.upload.private.performance
   temporaryDirectory: tmp/
   saveDirectory: save/
 
@@ -64,7 +67,7 @@ reservation:
 
 # static contents(CloudFrontを利用)
 content:
-  url: https://XXX.cloudfront.net
+  url: https://ddcskatozjj1n.cloudfront.net
 
 # Logging
 logging:
@@ -74,16 +77,25 @@ logging:
   level:
     root: warn
 
-# Redis(ElastiCacheのRedis Clusterを使用)
+# RedisMessageListenerContainerのconcurrencyLimit設定
 spring:
   redis:
-    cluster:
-      nodes:
-        - cn-int-redis-cls.XXXX.clustercfg.apne1.cache.amazonaws.com:6379
-    pool:
-      max-active: 137
-      max-idle: 137
-      max-wait: -1
-      min-idle: 137
     listener:
       concurrencyLimit: 2
+
+# Redis(Session用/Cache用)
+redis:
+  session:
+    cluster:
+      node1: cn-int-redis-cls.xxxx.clustercfg.apne1.cache.amazonaws.com:6379
+    maxTotal: 137
+    maxIdle: 137
+    maxWaitMillis: -1
+    minIdle: 137
+  cache:
+    cluster:
+      node1: cn-int-redis-cls.xxxx.clustercfg.apne1.cache.amazonaws.com:6379 # please change redis endpoint for cache
+    maxTotal: 137
+    maxIdle: 137
+    maxWaitMillis: -1
+    minIdle: 137

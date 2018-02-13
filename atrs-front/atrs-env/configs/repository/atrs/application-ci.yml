@@ -1,4 +1,4 @@
-﻿# for CI environment on EC2
+# for CI environment on EC2
 
 cloud:
   aws:
@@ -9,8 +9,8 @@ cloud:
       auto: false
     # DynamoDB
     dynamodb:
-      # DynamoDBは同一テーブル名を使用しているため、環境毎にエンドポイント、もしくはAWSアカウントを切り替える。
-      endpoint: https://dynamodb.ap-northeast-2.amazonaws.com
+      # DynamoDBは同一テーブル名を使用しているため、環境毎にリージョン、もしくはAWSアカウントを切り替える。
+      region: ap-northeast-2
     # SQS
     sqs:
       region: ap-northeast-1
@@ -20,6 +20,8 @@ cloud:
 
 # RDB(RDSを使用)
 database:
+  # RDSのリージョン設定
+  rdsRegion: ap-northeast-1
   common:
     data-source:
       # 各DBの共通設定
@@ -44,7 +46,10 @@ database:
       name: default
   data-sources:
     - schema: default
-      url: jdbc:postgresql://atrs-ci-shard.XXXX.rds.amazonaws.com:5432/atrs?socketTimeout=120&connectTimeout=120
+      dbInstanceIdentifier: atrs-ci-shard
+      driverUrlOption: socketTimeout=120&connectTimeout=120
+      # replicaRegionはキー[database.rdsRegion]に設定した値と違う場合に設定する。
+      #replicaRegion: us-east-1
     - schema: atrs1
       url: jdbc:postgresql://atrs-ci-shard1.XXXX.ap-northeast-1.rds.amazonaws.com:5432/atrs?socketTimeout=120&connectTimeout=120
     - schema: atrs2
@@ -52,7 +57,7 @@ database:
 
 # upload directories
 upload:
-  bucketName: XXXX.YYYY.ZZZZ
+  bucketName: atrs.upload.private.ci
   temporaryDirectory: tmp/
   saveDirectory: save/
 
@@ -64,7 +69,7 @@ reservation:
 
 # static contents(CloudFrontを利用)
 content:
-  url: https://XXX.cloudfront.net
+  url: https://d3k60ua4cxdcb9.cloudfront.net
 
 # Logging
 logging:
@@ -72,16 +77,25 @@ logging:
   # Workaround for duplicated log files
   config: classpath:atrs-logback-spring.xml
 
-# Redis(ElastiCacheのRedis Clusterを使用)
+# RedisMessageListenerContainerのconcurrencyLimit設定
 spring:
   redis:
-    cluster:
-      nodes:
-        - atrs-ci.XXXX.clustercfg.apne1.cache.amazonaws.com:6379
-    pool:
-      max-active: 8
-      max-idle: 8
-      max-wait: -1
-      min-idle: 0
     listener:
       concurrencyLimit: 2
+
+# Redis(Session用/Cache用)
+redis:
+  session:
+    cluster:
+      node1: atrs-ci.XXXX.clustercfg.apne1.cache.amazonaws.com:6379
+    maxTotal: 8
+    maxIdle: 8
+    maxWaitMillis: -1
+    minIdle: 0
+  cache:
+    cluster:
+      node1: atrs-ci-cache.xxxx.clustercfg.apne1.cache.amazonaws.com:6379
+    maxTotal: 8
+    maxIdle: 8
+    maxWaitMillis: -1
+    minIdle: 0

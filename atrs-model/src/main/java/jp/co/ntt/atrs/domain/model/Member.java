@@ -1,5 +1,18 @@
 /*
- * Copyright(c) 2017 NTT Corporation.
+ * Copyright 2014-2017 NTT Corporation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
  */
 package jp.co.ntt.atrs.domain.model;
 
@@ -96,7 +109,7 @@ public class Member implements Serializable {
     private MemberLogin memberLogin;
 
     /**
-     * 顔写真ファイル名。
+     * 顔写真ファイル名(一時ファイル)。
      */
     private String photoFileName;
 
@@ -104,6 +117,11 @@ public class Member implements Serializable {
      * 顔写真(Base64エンコード)。
      */
     private String photoBase64;
+
+    /**
+     * 顔写真ファイル名(保存用)。
+     */
+    private String registeredPhotoFileName;
 
     /**
      * お客様番号を取得する。
@@ -351,7 +369,6 @@ public class Member implements Serializable {
      * </p>
      * @return photoFileName 顔写真ファイル名
      */
-
     public String getPhotoFileName() {
         return photoFileName;
     }
@@ -362,7 +379,6 @@ public class Member implements Serializable {
      * </p>
      * @param photoFileName 顔写真ファイル名
      */
-
     public void setPhotoFileName(String photoFileName) {
         this.photoFileName = photoFileName;
     }
@@ -373,7 +389,6 @@ public class Member implements Serializable {
      * </p>
      * @return photoBase64 顔写真(Base64エンコード)
      */
-
     public String getPhotoBase64() {
         return photoBase64;
     }
@@ -384,9 +399,28 @@ public class Member implements Serializable {
      * </p>
      * @param photoBase64 顔写真(Base64エンコード)
      */
-
     public void setPhotoBase64(String photoBase64) {
         this.photoBase64 = photoBase64;
+    }
+
+    /**
+     * <p>
+     * 顔写真ファイル名を取得します。
+     * </p>
+     * @return registeredphotoFileName 顔写真ファイル名
+     */
+    public String getRegisteredPhotoFileName() {
+        return registeredPhotoFileName;
+    }
+
+    /**
+     * <p>
+     * 顔写真ファイル名を設定します。
+     * </p>
+     * @param registeredphotoFileName 顔写真ファイル名
+     */
+    public void setRegisteredPhotoFileName(String registeredPhotoFileName) {
+        this.registeredPhotoFileName = registeredPhotoFileName;
     }
 
     /**

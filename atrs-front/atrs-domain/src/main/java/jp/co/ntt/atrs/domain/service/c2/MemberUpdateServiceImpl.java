@@ -1,5 +1,18 @@
 /*
- * Copyright(c) 2017 NTT Corporation.
+ * Copyright 2014-2017 NTT Corporation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
  */
 package jp.co.ntt.atrs.domain.service.c2;
 
@@ -99,18 +112,15 @@ public class MemberUpdateServiceImpl implements MemberUpdateService {
 
         Member member = memberRepository.findOne(customerNo);
 
-        // 顔写真を取得する。データが複数存在した場合はエラーとする。
-        Resource[] photoFileResources = s3Helper.fileSearch(bucketName,
-                saveDirectory, customerNo + "*");
-        if (photoFileResources.length == 1) {
-            // 顔写真データのBase64変換を行う。
-            try (InputStream photoFile = photoFileResources[0].getInputStream()) {
+        // 顔写真を取得する。
+        Resource photoFileResource = s3Helper.getResource(bucketName,
+                saveDirectory, member.getRegisteredPhotoFileName());
+        if (photoFileResource.exists()) {
+            // 顔写真が存在する場合は、顔写真データのBase64変換を行う。
+            try (InputStream photoFile = photoFileResource.getInputStream()) {
                 member.setPhotoBase64(imageFileBase64Encoder.encodeBase64(
                         photoFile, "jpg"));
             }
-        } else if (photoFileResources.length > 1) {
-            throw new SystemException(LogMessages.E_AR_A0_L9004.getCode(), LogMessages.E_AR_A0_L9004
-                    .getMessage(customerNo));
         }
 
         return member;
@@ -148,23 +158,37 @@ public class MemberUpdateServiceImpl implements MemberUpdateService {
             }
         }
 
-        // ファイル保存を行う。
-        // 削除対象旧ファイルの検索
-        Resource[] oldPhotoResources = s3Helper.fileSearch(bucketName,
-                saveDirectory, member.getCustomerNo() + "*");
-        // 新規ファイル保存
-        s3Helper.fileCopy(bucketName, tmpDirectory, member.getPhotoFileName(),
-                bucketName, saveDirectory, member.getCustomerNo() + "_"
-                        + UUID.randomUUID().toString() + ".jpg");
+        // 画像ファイルが選択されている場合のみ画像の更新を行う 。（photoFileNameの有無で判断する）
+        if (member.getPhotoFileName() != null) {
+            // ファイル保存を行う。
+            // 削除対象旧ファイルの検索
+            Resource[] oldPhotoResources = s3Helper.fileSearch(bucketName,
+                    saveDirectory, member.getCustomerNo() + "*");
+            // 新規ファイル保存
+            String s3PhotoFileName = member.getCustomerNo() + "_" + UUID
+                    .randomUUID().toString() + ".jpg";
+            s3Helper.fileCopy(bucketName, tmpDirectory, member.getPhotoFileName(),
+                    bucketName, saveDirectory, s3PhotoFileName);
 
-        // 旧ファイルおよび一時ファイルの削除
-        List<String> deleteKeyList = new ArrayList<String>();
-        for (Resource oldPhotoResource : oldPhotoResources) {
-            AmazonS3URI deleteURI = s3Helper.getAmazonS3URI(oldPhotoResource);
-            deleteKeyList.add(deleteURI.getKey());
+            // 旧ファイルおよび一時ファイルの削除
+            List<String> deleteKeyList = new ArrayList<String>();
+            for (Resource oldPhotoResource : oldPhotoResources) {
+                AmazonS3URI deleteURI = s3Helper.getAmazonS3URI(oldPhotoResource);
+                deleteKeyList.add(deleteURI.getKey());
+            }
+            deleteKeyList.add(tmpDirectory + member.getPhotoFileName());
+            s3Helper.multiFileDelete(bucketName, deleteKeyList);
+
+            // 顔写真ファイル名の更新を行う。
+            member.setRegisteredPhotoFileName(s3PhotoFileName);
+            int updateCount = memberRepository.update(member);
+            if (updateCount != 1) {
+                throw new SystemException(LogMessages.E_AR_A0_L9002
+                        .getCode(), LogMessages.E_AR_A0_L9002.getMessage(
+                                updateCount, 1));
+            }
         }
-        deleteKeyList.add(tmpDirectory + member.getPhotoFileName());
-        s3Helper.multiFileDelete(bucketName, deleteKeyList);
+
     }
 
     /**
