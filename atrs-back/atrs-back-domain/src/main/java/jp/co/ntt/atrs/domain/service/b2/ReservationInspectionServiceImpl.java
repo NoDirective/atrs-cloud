@@ -1,13 +1,27 @@
 /*
- * Copyright(c) 2017 NTT Corporation.
+ * Copyright 2014-2017 NTT Corporation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
  */
 package jp.co.ntt.atrs.domain.service.b2;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import javax.inject.Inject;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import jp.co.ntt.atrs.domain.common.messaging.DuplicateMessageChecker;
 import jp.co.ntt.atrs.domain.model.Reservation;
 
 /**
@@ -19,43 +33,35 @@ public class ReservationInspectionServiceImpl implements
                                              ReservationInspectionService {
 
     /**
-     * ロガー。
+     * 2重受信チェックユーティリティ
      */
-    private static final Logger LOGGER = LoggerFactory
-            .getLogger(ReservationInspectionServiceImpl.class);
+    @Inject
+    DuplicateMessageChecker duplicateMessageChecker;
 
     /**
-     * ダミー処理を行う時間。ミリ秒。
+     * チケット予約共通サービス
      */
-    @Value("${reservation.inspection.processing.time}")
-    private Integer processingTime;
+    @Inject
+    ReservationSharedService reservationSharedService;
 
     /**
-     * チケット予約審査を行う。
+     * チケット予約審査とユーザへの通知を行う
      * @param reservation 予約情報
+     * @param messageId メッセージID
      */
     @Override
-    public void inspect(Reservation reservation) {
+    @Transactional
+    public void inspectAndNotify(Reservation reservation, String messageId) {
 
-        // 負荷試験を想定し、ダミー処理で素数計算を行う。
-        long start = System.currentTimeMillis();
-        LOGGER.debug("=== 予約審査(ダミー)処理開始 ===");
+        // 2重受信チェックを行う
+        duplicateMessageChecker.checkDuplicateMessage(messageId);
 
-        int i = 1;
-        while (true) {
-            for (int j = 2; j < i; j++) {
-                if (i % j == 0) {
-                    break;
-                }
-            }
+        // チケット予約審査を行う(ダミー処理)
+        reservationSharedService.inspect(reservation);
 
-            // 設定時間を超えたらダミー処理を終了する
-            long now = System.currentTimeMillis();
-            if (now - start > processingTime) {
-                break;
-            }
-            i++;
-        }
-        LOGGER.debug("=== 予約審査(ダミー)処理終了 ===");
+        // チケット予約完了をユーザに通知する
+        reservationSharedService.notify(reservation);
     }
+
+
 }

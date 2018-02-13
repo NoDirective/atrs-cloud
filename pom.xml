@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>jp.co.ntt.atrs.cloud.aws</groupId>
     <artifactId>atrs-parent</artifactId>
-    <version>1.0.0.BETA</version>
+    <version>1.0.0.RELEASE</version>
     <packaging>pom</packaging>
     <modules>
         <module>/atrs-common</module>
@@ -11,47 +11,18 @@
         <module>/atrs-model</module>
         <module>/atrs-front</module>
         <module>/atrs-back</module>
+        <module>/atrs-integration-test</module>
     </modules>
     <parent>
         <groupId>org.terasoluna.gfw</groupId>
         <artifactId>terasoluna-gfw-parent</artifactId>
-        <version>5.3.0-SNAPSHOT</version>
+        <version>5.4.0.RELEASE</version>
         <relativePath />
     </parent>
     <name>AIRLINE TICKET RESERVATION SYSTEM Parent POM</name>
     <description>AIRLINE TICKET RESERVATION SYSTEM Parent POM</description>
 
     <repositories>
-        <repository>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <id>terasoluna-gfw-releases</id>
-            <url>http://repo.terasoluna.org/nexus/content/repositories/terasoluna-gfw-releases/</url>
-        </repository>
-        <repository>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <id>terasoluna-gfw-snapshots</id>
-            <url>http://repo.terasoluna.org/nexus/content/repositories/terasoluna-gfw-snapshots/</url>
-        </repository>
-        <repository>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <id>terasoluna-gfw-3rdparty</id>
-            <url>http://repo.terasoluna.org/nexus/content/repositories/terasoluna-gfw-3rdparty/</url>
-        </repository>
         <repository>
             <id>spring-repo</id>
             <name>Spring Repository</name>
@@ -65,15 +36,56 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
-        <repository>
-            <id>opensourceagility-release</id>
-            <url>http://repo.opensourceagility.com/release/</url>
-        </repository>
     </repositories>
 
     <build>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>${org.apache.maven.plugins.maven-failsafe-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>integration-test</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>${org.codehaus.mojo.build-helper-maven-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>add-source</id>
+                            <phase>generate-sources</phase>
+                            <goals>
+                                <goal>add-source</goal>
+                            </goals>
+                            <configuration>
+                                <sources>
+                                    <source>src/generated/java</source>
+                                </sources>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>add-resource</id>
+                            <phase>generate-resources</phase>
+                            <goals>
+                                <goal>add-resource</goal>
+                            </goals>
+                            <configuration>
+                                <resources>
+                                    <resource>
+                                        <directory>src/generated/resources</directory>
+                                    </resource>
+                                </resources>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-checkstyle-plugin</artifactId>
@@ -174,6 +186,22 @@
                         </headerDefinitions>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${org.apache.maven.plugins.maven-surefire-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>repackage</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins />
@@ -192,6 +220,11 @@
                 <artifactId>atrs-model</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>atrs-domain</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <!-- == End ATRS == -->
             <!-- == Begin Database == -->
             <dependency>
@@ -207,6 +240,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
             <!-- == Begin AmazonAWS == -->
             <dependency>
                 <groupId>com.amazonaws</groupId>
@@ -230,19 +264,24 @@
         <org.apache.maven.plugins.maven-resources-plugin.version>2.6</org.apache.maven.plugins.maven-resources-plugin.version>
         <org.apache.maven.plugins.maven-source-plugin.version>2.2</org.apache.maven.plugins.maven-source-plugin.version>
         <org.apache.maven.plugins.maven-war-plugin.version>2.2</org.apache.maven.plugins.maven-war-plugin.version>
+        <org.apache.maven.plugins.maven-failsafe-plugin.version>2.19</org.apache.maven.plugins.maven-failsafe-plugin.version>
         <org.apache.maven.plugins.version>2.5</org.apache.maven.plugins.version>
+        <org.apache.maven.plugins.maven-surefire-plugin.version>2.20</org.apache.maven.plugins.maven-surefire-plugin.version>
         <formatter-maven-plugin.version>0.5.2</formatter-maven-plugin.version>
         <com.google.code.maven-license-plugin.version>1.4.0</com.google.code.maven-license-plugin.version>
         <org.codehaus.mojo.version>2.5</org.codehaus.mojo.version>
+        <org.codehaus.mojo.build-helper-maven-plugin.version>1.9.1</org.codehaus.mojo.build-helper-maven-plugin.version>
         <!-- == Dependency Versions == -->
         <postgresql.version>9.4-1206-jdbc41</postgresql.version>
-        <org.springframework.cloud.spring-cloud-dependencies.version>Camden.SR2</org.springframework.cloud.spring-cloud-dependencies.version>
+        <org.springframework.cloud.spring-cloud-dependencies.version>Dalston.SR4</org.springframework.cloud.spring-cloud-dependencies.version>
         <com.amazonaws.amazon-sqs-java-messaging-lib.version>1.0.1</com.amazonaws.amazon-sqs-java-messaging-lib.version>
-        <org.springframework.data.dynamodb-dependencies.version>4.2.3</org.springframework.data.dynamodb-dependencies.version>
+        <org.springframework.data.dynamodb-dependencies.version>4.5.0</org.springframework.data.dynamodb-dependencies.version>
         <!-- == Project Properties == -->
         <encoding>UTF-8</encoding>
         <java-version>1.8</java-version>
         <project.root.basedir>${project.basedir}</project.root.basedir>
+        <!-- デフォルトではテストはスキップする。実行する場合、引数に[-DskipTests=false]を付与する -->
+        <skipTests>true</skipTests>
     </properties>
 
 </project>

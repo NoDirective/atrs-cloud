@@ -1,5 +1,18 @@
 /*
- * Copyright(c) 2017 NTT Corporation.
+ * Copyright 2014-2017 NTT Corporation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
  */
 package jp.co.ntt.atrs.domain.service.b0;
 
@@ -34,7 +47,6 @@ import jp.co.ntt.atrs.domain.model.FareTypeCd;
 import jp.co.ntt.atrs.domain.model.Flight;
 import jp.co.ntt.atrs.domain.model.PeakTime;
 import jp.co.ntt.atrs.domain.model.Reservation;
-import jp.co.ntt.atrs.domain.model.ReservationNotificationMessage;
 import jp.co.ntt.atrs.domain.model.Route;
 import jp.co.ntt.atrs.domain.repository.flight.FlightRepository;
 import jp.co.ntt.atrs.domain.service.b1.TicketSearchErrorCode;
@@ -124,8 +136,9 @@ public class TicketSharedServiceImpl implements TicketSharedService {
     @Override
     public void validateFlightList(List<Flight> flightList) throws BusinessException {
 
-        Assert.notEmpty(flightList);
-        Assert.isTrue(flightList.size() <= 2);
+        Assert.notEmpty(flightList, "flightList must contain elements");
+        Assert.isTrue(flightList.size() <= 2,
+                "flightList size must be greater than or equal to 2");
 
         // 2件の場合、往復路フライトのチェックを行う
         if (flightList.size() < 2) {
@@ -134,11 +147,11 @@ public class TicketSharedServiceImpl implements TicketSharedService {
 
         // 往路フライト
         Flight outwardFlight = flightList.get(0);
-        Assert.notNull(outwardFlight);
+        Assert.notNull(outwardFlight, "outwardFlight must not be null");
 
         // 復路フライト
         Flight homewardFlight = flightList.get(1);
-        Assert.notNull(homewardFlight);
+        Assert.notNull(homewardFlight, "homewardFlight must not be null");
 
         // 選択した復路のフライトが搭乗範囲内であることを確認する。
         validateFlightDepartureDateForRoundTripFlight(outwardFlight,
@@ -215,7 +228,8 @@ public class TicketSharedServiceImpl implements TicketSharedService {
 
         // 往路の運賃種別は必ず往復運賃または特別往復運賃
         Assert.isTrue(FareTypeCd.RT.equals(outwardFareTypeCd)
-                || FareTypeCd.SRT.equals(outwardFareTypeCd));
+                || FareTypeCd.SRT.equals(outwardFareTypeCd),
+                "outwardFareTypeCd mast be either FareTypeCd.RT or FareTypeCd.SRT");
 
         // 復路の運賃種別が往復運賃または特別往復運賃でない場合、業務例外をスローする。
         if (!FareTypeCd.RT.equals(homewardFareTypeCd)
@@ -231,7 +245,7 @@ public class TicketSharedServiceImpl implements TicketSharedService {
      */
     @Override
     public void validateDepatureDate(Date departureDate) throws BusinessException {
-        Assert.notNull(departureDate);
+        Assert.notNull(departureDate, "departureDate must not be null");
 
         DateTime sysDateMidnight = dateFactory.newDateTime()
                 .withTimeAtStartOfDay();
@@ -251,8 +265,8 @@ public class TicketSharedServiceImpl implements TicketSharedService {
      */
     @Override
     public boolean isAvailableFareType(FareType fareType, Date depDate) {
-        Assert.notNull(fareType);
-        Assert.notNull(depDate);
+        Assert.notNull(fareType, "fareType must not be null");
+        Assert.notNull(depDate, "depDate must not be null");
 
         DateTime depDateMidnight = new DateTime(depDate).withTimeAtStartOfDay();
 
@@ -280,9 +294,10 @@ public class TicketSharedServiceImpl implements TicketSharedService {
     @Transactional(readOnly = true)
     public int calculateBasicFare(int basicFareOfRoute,
             BoardingClassCd boardingClassCd, Date depDate) {
-        Assert.isTrue(basicFareOfRoute >= 0);
-        Assert.notNull(boardingClassCd);
-        Assert.notNull(depDate);
+        Assert.isTrue(basicFareOfRoute >= 0,
+                "basicFareOfRoute must be greater than or equal to 0");
+        Assert.notNull(boardingClassCd, "boardingClassCd must not be null");
+        Assert.notNull(depDate, "depDate must not be null");
 
         // 搭乗クラスの加算料金の取得
         BoardingClass boardingClass = boardingClassProvider
@@ -322,9 +337,12 @@ public class TicketSharedServiceImpl implements TicketSharedService {
      */
     @Override
     public int calculateFare(int basicFare, int discountRate) {
-        Assert.isTrue(basicFare >= 0);
-        Assert.isTrue(discountRate >= 0);
-        Assert.isTrue(discountRate <= 100);
+        Assert.isTrue(basicFare >= 0,
+                "basicFare must be greater than or equal to 0");
+        Assert.isTrue(discountRate >= 0,
+                "discountRate must be greater than or equal to 0");
+        Assert.isTrue(discountRate <= 100,
+                "discountRate must be less than or equal to 100");
 
         // 運賃の計算
         int fare = (int) (basicFare * (1 - (discountRate * 0.01)));
@@ -339,8 +357,9 @@ public class TicketSharedServiceImpl implements TicketSharedService {
     @Override
     @Transactional(readOnly = true)
     public boolean existsFlight(Flight flight) {
-        Assert.notNull(flight);
-        Assert.notNull(flight.getFlightMaster());
+        Assert.notNull(flight, "flight must not be null");
+        Assert.notNull(flight.getFlightMaster(),
+                "flightMaster must not be null");
         return flightRepository.exists(flight.getDepartureDate(), flight
                 .getFlightMaster().getFlightName(), flight.getBoardingClass(),
                 flight.getFareType());
@@ -351,8 +370,6 @@ public class TicketSharedServiceImpl implements TicketSharedService {
      */
     @Override
     public void notifyReservation(Reservation reservation) {
-        ReservationNotificationMessage message = new ReservationNotificationMessage();
-        message.setReservation(reservation);
-        messageSender.send(queueName, message);
+        messageSender.send(queueName, reservation);
     }
 }

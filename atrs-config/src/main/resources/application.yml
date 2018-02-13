@@ -1,4 +1,4 @@
-﻿server:
+server:
   port: 8888
 spring:
   cloud:
@@ -23,3 +23,30 @@ management:
     s3:
       uri: ${spring.cloud.config.server.s3.uri}
 
+# JVM起動引数によりシステムプロパティとして指定する必要のあるConfigサーバ自身の環境依存設定値
+#
+# logging:
+#   file: /var/log/atrslogs/atrs-config.log (必要に応じて環境別に出力先を指定)
+#
+# spring:
+#   cloud:
+#     config: 
+#       server: 
+#         s3:
+#           uri: s3://atrs.config.repo (必要に応じて環境別にURIを切り替える)
+#
+# cloud: 
+#   aws:
+#     region:
+#       static: ap-northeast-1 (非EC2上実行時のみ指定)
+#       auto: false (非EC2上実行時はfalse、EC2上実行時はtrueもしくは省略)
+#
+# ローカルPC上実行時のJVM起動引数の設定例
+# -Dlogging.file=/var/log/atrslogs/atrs-config.log
+# -Dspring.cloud.config.server.s3.uri=s3://atrs.config.repo
+# -Dcloud.aws.region.static=ap-northeast-1
+# -Dcloud.aws.region.auto=false
+#
+# EC2上実行時のJVM起動引数の設定例
+# -Dlogging.file=/var/log/atrslogs/atrs-config.log
+# -Dspring.cloud.config.server.s3.uri=s3://atrs.config.repo.performance

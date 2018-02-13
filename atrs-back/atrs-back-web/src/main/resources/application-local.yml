@@ -1,4 +1,4 @@
-﻿# for development environment on local PC
+# for development environment on local PC
 
 cloud:
   aws:
@@ -48,8 +48,8 @@ reservation:
     queue: RESERVATION_NOTICE
     concurrency: 5-10
     mail:
-      # 実際のものに置き換えが必要
-      from: atrs-cloud@XXXX.YYYY.jp
+      from: xx@xx.xx.xx.xx
+      templateFile: reservation-mail.ftl
 
 # Logging
 logging:

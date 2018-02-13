@@ -6,7 +6,7 @@
     <parent>
         <groupId>jp.co.ntt.atrs.cloud.aws</groupId>
         <artifactId>atrs-front</artifactId>
-        <version>1.0.0.BETA</version>
+        <version>1.0.0.RELEASE</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -48,7 +48,7 @@
                 <db.groupId>${shard.db.group.id}</db.groupId>
                 <db.artifactId>${shard.db.artifactId}</db.artifactId>
                 <db.version>${postgresql.version}</db.version>
-                <dynamo.db.endpoint>https://dynamodb.ap-northeast-1.amazonaws.com</dynamo.db.endpoint>
+                <dynamo.db.region>northeast-1</dynamo.db.region>
                 <redis.host>localhost</redis.host>
                 <redis.port>6379</redis.port>
             </properties>
@@ -93,7 +93,7 @@
                 <db.groupId>${shard.db.group.id}</db.groupId>
                 <db.artifactId>${shard.db.artifactId}</db.artifactId>
                 <db.version>${postgresql.version}</db.version>
-                <dynamo.db.endpoint>https://dynamodb.ap-northeast-1.amazonaws.com</dynamo.db.endpoint>
+                <dynamo.db.region>northeast-1</dynamo.db.region>
                 <redis.host>localhost</redis.host>
                 <redis.port>6379</redis.port>
             </properties>
@@ -102,7 +102,7 @@
             <id>dev1</id>
             <properties>
                 <db.encoding>UTF8</db.encoding>
-                <db.url>jdbc:postgresql://atrs-dev-shard1.XXXX.ap-northeast-1.rds.amazonaws.com:5432/atrs</db.url>
+                <db.url>jdbc:postgresql://atrs-ci-shard2-public.XXXX.ap-northeast-1.rds.amazonaws.com:5432/atrs1</db.url>
                 <db.username>atrsuser</db.username>
                 <db.password>atrsuser</db.password>
                 <db.basedir>${shard.integration.base.dir1}</db.basedir>
@@ -116,7 +116,7 @@
             <id>dev2</id>
             <properties>
                 <db.encoding>UTF8</db.encoding>
-                <db.url>jdbc:postgresql://atrs-dev-shard2.XXXX.ap-northeast-1.rds.amazonaws.com:5432/atrs</db.url>
+                <db.url>jdbc:postgresql://atrs-ci-shard1-public.XXXX.ap-northeast-1.rds.amazonaws.com:5432/atrs2</db.url>
                 <db.username>atrsuser</db.username>
                 <db.password>atrsuser</db.password>
                 <db.basedir>${shard.integration.base.dir2}</db.basedir>
@@ -138,8 +138,8 @@
                 <db.groupId>${shard.db.group.id}</db.groupId>
                 <db.artifactId>${shard.db.artifactId}</db.artifactId>
                 <db.version>${postgresql.version}</db.version>
-                <dynamo.db.endpoint>https://dynamodb.ap-northeast-2.amazonaws.com</dynamo.db.endpoint>
-                <redis.cluster.nodes>atrs-ci.XXXX.clustercfg.apne1.cache.amazonaws.com:6379</redis.cluster.nodes>
+                <dynamo.db.region>northeast-2</dynamo.db.region>
+                <redis.cluster.nodes>atrs-ci.xxxx.clustercfg.apne1.cache.amazonaws.com:6379,atrs-ci-cache.xxxx.clustercfg.apne1.cache.amazonaws.com:6379</redis.cluster.nodes>
             </properties>
         </profile>
         <profile>
@@ -182,8 +182,8 @@
                 <db.groupId>${shard.db.group.id}</db.groupId>
                 <db.artifactId>${shard.db.artifactId}</db.artifactId>
                 <db.version>${postgresql.version}</db.version>
-                <dynamo.db.endpoint>https://dynamodb.ap-northeast-1.amazonaws.com</dynamo.db.endpoint>
-                <redis.cluster.nodes>cn-int-redis-cls.XXXX.clustercfg.apne1.cache.amazonaws.com:6379</redis.cluster.nodes>
+                <dynamo.db.region>northeast-1</dynamo.db.region>
+                <redis.cluster.nodes>cn-int-redis-cls.xxxx.clustercfg.apne1.cache.amazonaws.com:6379</redis.cluster.nodes>
             </properties>
         </profile>
         <profile>
@@ -226,8 +226,8 @@
                 <db.groupId>${shard.db.group.id}</db.groupId>
                 <db.artifactId>${shard.db.artifactId}</db.artifactId>
                 <db.version>${postgresql.version}</db.version>
-                <dynamo.db.endpoint>https://dynamo.ap-northeast-1.amazonaws.com</dynamo.db.endpoint>
-                <redis.cluster.nodes>cn-int-redis-cls.XXXX.clustercfg.apne1.cache.amazonaws.com:6379</redis.cluster.nodes>
+                <dynamo.db.region>northeast-1</dynamo.db.region>
+                <redis.cluster.nodes>cn-int-redis-cls.xxxx.clustercfg.apne1.cache.amazonaws.com:6379</redis.cluster.nodes>
             </properties>
         </profile>
         <profile>
@@ -307,7 +307,7 @@
                         <taskdef name="dynamoDBTask"
                             classname="jp.co.ntt.atrs.initdb.task.DynamoDBTask"
                             classpathref="maven.compile.classpath" />
-                        <dynamoDBTask endpoint="${dynamo.db.endpoint}"
+                        <dynamoDBTask region="${dynamo.db.region}"
                             dbDriver="${db.driver}" dbUrl="${db.url}"
                             dbUsername="${db.username}" dbPassword="${db.password}"
                             tablename="${dynamo.db.tablename}"

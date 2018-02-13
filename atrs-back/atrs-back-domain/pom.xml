@@ -7,7 +7,7 @@
     <parent>
         <groupId>jp.co.ntt.atrs.cloud.aws</groupId>
         <artifactId>atrs-back</artifactId>
-        <version>1.0.0.BETA</version>
+        <version>1.0.0.RELEASE</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -95,12 +95,27 @@
         </dependency>
         <!-- == End Spring Messaging == -->
 
-        <!-- == Begin Amazon SQS == -->
+        <!-- == Begin Amazon == -->
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>amazon-sqs-java-messaging-lib</artifactId>
         </dependency>
-        <!-- == End Amazon SQS == -->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-ses</artifactId>
+        </dependency>
+        <!-- == End Amazon == -->
+
+        <!-- == Begin JavaMail == -->
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+        </dependency>
+        <!-- == End JavaMail == -->
 
         <!-- == Begin Unit Test == -->
         <dependency>

@@ -24,60 +24,139 @@
             cron="${cron.codelist.refreshTime}" />
     </task:scheduled-tasks>
 
-    <!-- Amazon SQS ConnectionFactory -->
-    <bean id="connectionFactory" class="com.amazon.sqs.javamessaging.SQSConnectionFactory"
-        factory-bean="connectionFactoryBuilder" factory-method="build" />
-
-    <bean id="connectionFactoryBuilder"
-        class="com.amazon.sqs.javamessaging.SQSConnectionFactory$Builder">
-        <property name="regionName" value="${cloud.aws.sqs.region}" />
-    </bean>
-
     <!-- turn on declarative caching -->
     <cache:annotation-driven order="-1" />
-
-    <!-- CacheManager with local heap -->
-    <bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
-        <property name="caches">
-            <set>
-                <bean
-                    class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
-                    <property name="name" value="codelists" />
-                </bean>
-                <bean
-                    class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
-                    <property name="name" value="members" />
-                </bean>
-                <bean
-                    class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
-                    <property name="name" value="shardids" />
-                </bean>
-                <bean
-                    class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
-                    <property name="name" value="boardingClass" />
-                </bean>
-                <bean
-                    class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
-                    <property name="name" value="fareType" />
-                </bean>
-                <bean
-                    class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
-                    <property name="name" value="FlightMaster" />
-                </bean>
-                <bean
-                    class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
-                    <property name="name" value="peakTimes" />
-                </bean>
-                <bean
-                    class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
-                    <property name="name" value="route" />
-                </bean>
-            </set>
-        </property>
-    </bean>
 
     <!-- Concurrency Limit for RedisMessageListenerContainer -->
     <bean id="springSessionRedisTaskExecutor" class="org.springframework.core.task.SimpleAsyncTaskExecutor">
         <property name="concurrencyLimit" value="${spring.redis.listener.concurrencyLimit}" />
     </bean>
+
+    <!-- CacheManager with local heap -->
+    <beans profile="localcache">
+        <bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
+            <property name="caches">
+                <set>
+                    <bean
+                        class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
+                        <property name="name" value="codelists" />
+                    </bean>
+                    <bean
+                        class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
+                        <property name="name" value="members" />
+                    </bean>
+                    <bean
+                        class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
+                        <property name="name" value="shardids" />
+                    </bean>
+                    <bean
+                        class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
+                        <property name="name" value="boardingClass" />
+                    </bean>
+                    <bean
+                        class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
+                        <property name="name" value="fareType" />
+                    </bean>
+                    <bean
+                        class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
+                        <property name="name" value="FlightMaster" />
+                    </bean>
+                    <bean
+                        class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
+                        <property name="name" value="peakTimes" />
+                    </bean>
+                    <bean
+                        class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
+                        <property name="name" value="route" />
+                    </bean>
+                </set>
+            </property>
+        </bean>
+    </beans>
+
+    <!-- CacheManager with Redis -->
+    <beans profile="default,local,dev,ci,spstest,rediscache">
+        <bean id="cacheManager" class="org.springframework.data.redis.cache.RedisCacheManager">
+            <constructor-arg ref="redisTemplateForCache" />
+        </bean>
+
+        <bean id="redisTemplateForCache" class="org.springframework.data.redis.core.RedisTemplate" p:connection-factory-ref="jedisConnectionFactoryForCache" />
+    </beans>
+
+    <beans profile="ci,spstest,rediscache">
+        <bean id="jedisConnectionFactoryForCache"
+            class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+            <constructor-arg index="0">
+                <bean
+                    class="org.springframework.data.redis.connection.RedisClusterConfiguration">
+                    <constructor-arg>
+                        <list>
+                            <value>${redis.cache.cluster.node1}</value>
+                        </list>
+                    </constructor-arg>
+                </bean>
+            </constructor-arg>
+            <constructor-arg index="1">
+                <bean class="redis.clients.jedis.JedisPoolConfig">
+                    <property name="maxTotal" value="${redis.cache.maxTotal}" />
+                    <property name="maxIdle" value="${redis.cache.maxIdle}" />
+                    <property name="maxWaitMillis" value="${redis.cache.maxWaitMillis}" />
+                    <property name="minIdle" value="${redis.cache.minIdle}" />
+                </bean>
+            </constructor-arg>
+        </bean>
+    </beans>
+
+    <beans profile="default,local,dev">
+        <bean id="jedisConnectionFactoryForCache"
+            class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" p:host-name="${redis.cache.server}" p:port="${redis.cache.port}">
+            <constructor-arg>
+                <bean class="redis.clients.jedis.JedisPoolConfig">
+                    <property name="maxTotal" value="${redis.cache.maxTotal}" />
+                    <property name="maxIdle" value="${redis.cache.maxIdle}" />
+                    <property name="maxWaitMillis" value="${redis.cache.maxWaitMillis}" />
+                    <property name="minIdle" value="${redis.cache.minIdle}" />
+                </bean>
+            </constructor-arg>
+        </bean>
+    </beans>
+
+    <!-- RedisConnectionFactory for Session -->
+    <beans profile="ci,spstest,performance">
+        <bean id="jedisConnectionFactoryForSession" primary="true"
+            class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+            <constructor-arg index="0">
+                <bean
+                    class="org.springframework.data.redis.connection.RedisClusterConfiguration">
+                    <constructor-arg>
+                        <list>
+                            <value>${redis.session.cluster.node1}</value>
+                        </list>
+                    </constructor-arg>
+                </bean>
+            </constructor-arg>
+            <constructor-arg index="1">
+                <bean class="redis.clients.jedis.JedisPoolConfig">
+                    <property name="maxTotal" value="${redis.session.maxTotal}" />
+                    <property name="maxIdle" value="${redis.session.maxIdle}" />
+                    <property name="maxWaitMillis" value="${redis.session.maxWaitMillis}" />
+                    <property name="minIdle" value="${redis.session.minIdle}" />
+                </bean>
+            </constructor-arg>
+        </bean>
+    </beans>
+    
+    <beans profile="default,local,dev">
+        <bean id="jedisConnectionFactoryForSession" primary="true"
+            class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" p:host-name="${redis.session.server}" p:port="${redis.session.port}">
+            <constructor-arg>
+                <bean class="redis.clients.jedis.JedisPoolConfig">
+                    <property name="maxTotal" value="${redis.session.maxTotal}" />
+                    <property name="maxIdle" value="${redis.session.maxIdle}" />
+                    <property name="maxWaitMillis" value="${redis.session.maxWaitMillis}" />
+                    <property name="minIdle" value="${redis.session.minIdle}" />
+                </bean>
+            </constructor-arg>
+        </bean>
+    </beans>
 </beans>

@@ -1,7 +1,33 @@
 /*
- * Copyright(c) 2017 NTT Corporation.
+ * Copyright 2014-2017 NTT Corporation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
  */
 package jp.co.ntt.atrs.domain.service.b2;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+import org.terasoluna.gfw.common.exception.BusinessException;
+import org.terasoluna.gfw.common.exception.SystemException;
 
 import jp.co.ntt.atrs.domain.common.exception.AtrsBusinessException;
 import jp.co.ntt.atrs.domain.common.logging.LogMessages;
@@ -20,19 +46,6 @@ import jp.co.ntt.atrs.domain.repository.flight.FlightRepository;
 import jp.co.ntt.atrs.domain.repository.member.MemberRepository;
 import jp.co.ntt.atrs.domain.repository.reservation.ReservationRepository;
 import jp.co.ntt.atrs.domain.service.b0.TicketSharedService;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
-import org.terasoluna.gfw.common.exception.BusinessException;
-import org.terasoluna.gfw.common.exception.SystemException;
-
-import java.util.Date;
-import java.util.List;
-
-import javax.inject.Inject;
 
 /**
  * チケット予約のサービス実装クラス。
@@ -90,15 +103,15 @@ public class TicketReserveServiceImpl implements TicketReserveService {
     public int calculateTotalFare(List<Flight> flightList,
             List<Passenger> passengerList) {
 
-        Assert.notEmpty(flightList);
-        Assert.notEmpty(passengerList);
+        Assert.notEmpty(flightList, "flightList must contain elements");
+        Assert.notEmpty(passengerList, "passengerList must contain elements");
 
         // 小児搭乗者数（12歳未満の搭乗者数）
         int childNum = 0;
         // 小児搭乗者数をカウントする。
         for (Passenger passenger : passengerList) {
             // リスト要素の null チェック
-            Assert.notNull(passenger);
+            Assert.notNull(passenger, "passenger must not be null");
             if (passenger.getAge() < adultPassengerMinAge) {
                 childNum++;
             }
@@ -116,7 +129,7 @@ public class TicketReserveServiceImpl implements TicketReserveService {
         int totalFare = 0;
         for (Flight flight : flightList) {
             // リスト要素の null チェック
-            Assert.notNull(flight);
+            Assert.notNull(flight, "flight must not be null");
 
             Route route = flight.getFlightMaster().getRoute();
             int baseFare = ticketSharedService.calculateBasicFare(route
@@ -147,8 +160,9 @@ public class TicketReserveServiceImpl implements TicketReserveService {
     @Override
     @Transactional(readOnly = true)
     public void validateReservation(Reservation reservation) throws BusinessException {
-        Assert.notNull(reservation);
-        Assert.notEmpty(reservation.getReserveFlightList());
+        Assert.notNull(reservation, "reservation must not be null");
+        Assert.notEmpty(reservation.getReserveFlightList(),
+                "reserveFlightList must contain elements");
 
         // 予約代表者の年齢が18歳以上であることを確認する。
         validateRepresentativeAge(reservation.getRepAge());
@@ -176,17 +190,18 @@ public class TicketReserveServiceImpl implements TicketReserveService {
             List<ReserveFlight> reserveFlightList) throws AtrsBusinessException {
         for (ReserveFlight reserveFlight : reserveFlightList) {
 
-            Assert.notNull(reserveFlight);
+            Assert.notNull(reserveFlight, "reserveFlight must not be null");
 
             // 搭乗者情報がDBから取得したカード会員情報と同一であることを確認する。
 
             // 搭乗者情報一覧
             List<Passenger> passengerList = reserveFlight.getPassengerList();
-            Assert.notEmpty(passengerList);
+            Assert.notEmpty(passengerList,
+                    "passengerList must contain elements");
 
             int position = 1;
             for (Passenger passenger : passengerList) {
-                Assert.notNull(passenger);
+                Assert.notNull(passenger, "passenger must not be null");
 
                 String passengerCustomerNo = passenger.getMember()
                         .getCustomerNo();
@@ -256,7 +271,7 @@ public class TicketReserveServiceImpl implements TicketReserveService {
     private void validateFareType(List<ReserveFlight> reserveFlightList) throws AtrsBusinessException {
         for (ReserveFlight reserveFlight : reserveFlightList) {
 
-            Assert.notNull(reserveFlight);
+            Assert.notNull(reserveFlight, "reserveFlight must not be null");
 
             // 運賃種別
             FareType fareType = reserveFlight.getFlight().getFareType();
@@ -266,13 +281,14 @@ public class TicketReserveServiceImpl implements TicketReserveService {
 
             // 搭乗者情報一覧
             List<Passenger> passengerList = reserveFlight.getPassengerList();
-            Assert.notEmpty(passengerList);
+            Assert.notEmpty(passengerList,
+                    "passengerList must contain elements");
 
             if (fareTypeCd == FareTypeCd.LD) {
                 // 運賃種別がレディース割であり、且つ、男性の搭乗者がいる場合、業務例外をスローする。
                 for (Passenger passenger : passengerList) {
 
-                    Assert.notNull(passenger);
+                    Assert.notNull(passenger, "passenger must not be null");
 
                     if (passenger.getGender() == Gender.M) {
                         throw new AtrsBusinessException(TicketReserveErrorCode.E_AR_B2_2009);
@@ -307,7 +323,7 @@ public class TicketReserveServiceImpl implements TicketReserveService {
     @ShardWithAccount("reservation.repMember.customerNo")
     public String registerMemberReservation(Reservation reservation) {
 
-        Assert.notNull(reservation);
+        Assert.notNull(reservation, "reservation must not be null");
 
         int reservationInsertCount = reservationRepository.insert(reservation);
         if (reservationInsertCount != 1) {
@@ -355,19 +371,20 @@ public class TicketReserveServiceImpl implements TicketReserveService {
     public TicketReserveDto registerReservation(String reserveNo,
             Reservation reservation) {
 
-        Assert.notNull(reservation);
+        Assert.notNull(reservation, "reservation must not be null");
 
         // 予約フライト情報一覧
         List<ReserveFlight> reserveFlightList = reservation
                 .getReserveFlightList();
-        Assert.notEmpty(reserveFlightList);
+        Assert.notEmpty(reserveFlightList,
+                "reserveFlightList must contain elements");
 
         // 予約フライト情報に対して空席数の確認および更新を行う。
         for (ReserveFlight reserveFlight : reserveFlightList) {
-            Assert.notNull(reserveFlight);
+            Assert.notNull(reserveFlight, "reserveFlight must not be null");
 
             Flight flight = reserveFlight.getFlight();
-            Assert.notNull(flight);
+            Assert.notNull(flight, "flight must not be null");
 
             // 搭乗日は運賃種別予約可能時期かをチェック
             if (!ticketSharedService.isAvailableFareType(flight.getFareType(),
@@ -440,7 +457,7 @@ public class TicketReserveServiceImpl implements TicketReserveService {
     @Override
     @Transactional(readOnly = true)
     public Member findMember(String customerNo) {
-        Assert.hasText(customerNo);
+        Assert.hasText(customerNo, "customerNo must not be empty");
         return memberRepository.findOne(customerNo);
     }
 

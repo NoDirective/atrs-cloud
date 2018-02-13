@@ -9,7 +9,7 @@
       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <mvc:annotation-driven>
+    <mvc:annotation-driven validator="validator">
         <mvc:argument-resolvers>
             <bean
                 class="org.springframework.data.web.PageableHandlerMethodArgumentResolver">
@@ -118,4 +118,8 @@
         <property name="trimTokens" value="false" />
     </bean>
 
+    <bean
+        class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor">
+        <property name="validator" ref="validator" />
+    </bean>
 </beans>

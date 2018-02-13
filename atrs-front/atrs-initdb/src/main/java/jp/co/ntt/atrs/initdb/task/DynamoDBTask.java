@@ -1,5 +1,18 @@
 /*
- * Copyright(c) 2017 NTT Corporation.
+ * Copyright 2014-2017 NTT Corporation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
  */
 package jp.co.ntt.atrs.initdb.task;
 
@@ -20,8 +33,8 @@ import org.springframework.util.StringUtils;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.Protocol;
-import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.dynamodbv2.model.AttributeDefinition;
@@ -42,9 +55,9 @@ public class DynamoDBTask extends Task {
 
     private DynamoDB dynamoDB;
 
-    private AmazonDynamoDBClient dynamoDBClient;
+    private AmazonDynamoDB dynamoDBClient;
 
-    private String endpoint;
+    private String region;
 
     private String dbDriver;
 
@@ -113,13 +126,13 @@ public class DynamoDBTask extends Task {
     }
 
     /**
-     * @param endpoint セットする endpoint
+     * @param region セットする region
      */
-    public void setEndpoint(String endpoint) {
-        if (endpoint != null && endpoint.startsWith("${")) {
-            endpoint = null;
+    public void setRegion(String region) {
+        if (region != null && region.startsWith("${")) {
+            region = null;
         }
-        this.endpoint = endpoint;
+        this.region = region;
     }
 
     /**
@@ -211,8 +224,8 @@ public class DynamoDBTask extends Task {
             validate();
 
             System.out
-                    .println("*********************** DynanoDBを初期化します。Endpoint="
-                            + endpoint
+                    .println("*********************** DynanoDBを初期化します。Region="
+                            + region
                             + " TableName="
                             + tablename
                             + " ***********************");
@@ -224,12 +237,14 @@ public class DynamoDBTask extends Task {
                 clientConfiguration.setProxyPort(Integer.parseInt(proxyPort));
                 clientConfiguration.setProxyUsername(proxyUsername);
                 clientConfiguration.setProxyPassword(proxyPassword);
-                dynamoDBClient = new AmazonDynamoDBClient(new DefaultAWSCredentialsProviderChain(), clientConfiguration);
+                dynamoDBClient = AmazonDynamoDBClientBuilder.standard()
+                        .withClientConfiguration(clientConfiguration)
+                        .withRegion(region).build();
             } else {
-                dynamoDBClient = new AmazonDynamoDBClient(new DefaultAWSCredentialsProviderChain());
+                dynamoDBClient = AmazonDynamoDBClientBuilder.standard()
+                        .withRegion(region).build();
             }
 
-            dynamoDBClient.withEndpoint(endpoint);
             dynamoDB = new DynamoDB(dynamoDBClient);
 
             createTable();
@@ -244,8 +259,8 @@ public class DynamoDBTask extends Task {
                 }
             }
             System.out
-                    .println("*********************** DynanoDBを初期化しました。Endpoint="
-                            + endpoint
+                    .println("*********************** DynanoDBを初期化しました。Region="
+                            + region
                             + " TableName="
                             + tablename
                             + " ***********************");
@@ -353,8 +368,8 @@ public class DynamoDBTask extends Task {
 
     private void validate() {
         StringBuilder sb = new StringBuilder();
-        if (StringUtils.isEmpty(endpoint)) {
-            sb.append("エンドポイント");
+        if (StringUtils.isEmpty(region)) {
+            sb.append("リージョン");
         }
         if (StringUtils.isEmpty(dbDriver)) {
             sb.append(" データベースドライバ");

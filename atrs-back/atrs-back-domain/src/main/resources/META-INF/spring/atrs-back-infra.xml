@@ -23,4 +23,14 @@
     <!-- ses mail sending -->
     <aws-mail:mail-sender id="sesMailSender" region="${cloud.aws.ses.region}"/>
 
+    <!-- Amazon SQS ConnectionFactory -->
+    <bean id="connectionFactory" class="com.amazon.sqs.javamessaging.SQSConnectionFactory"
+        factory-bean="connectionFactoryBuilder" factory-method="build" />
+
+    <bean id="connectionFactoryBuilder"
+        class="com.amazon.sqs.javamessaging.SQSConnectionFactory$Builder">
+        <property name="regionName" value="${cloud.aws.sqs.region}" />
+        <property name="awsCredentialsProvider" ref="credentialsProvider" />
+    </bean>
+
 </beans>

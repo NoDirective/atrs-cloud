@@ -1,4 +1,4 @@
-﻿# for development environment on local PC
+# for development environment on local PC
 
 cloud:
   aws:
@@ -10,8 +10,8 @@ cloud:
       instanceProfile: false
     # DynamoDB
     dynamodb:
-      # DynamoDBは同一テーブル名を使用しているため、環境毎にエンドポイント、もしくはAWSアカウントを切り替える。
-      endpoint: https://dynamodb.ap-northeast-1.amazonaws.com
+      # DynamoDBは同一テーブル名を使用しているため、環境毎にリージョン、もしくはAWSアカウントを切り替える。
+      region: ap-northeast-1
     # SQS
     sqs:
       region: ap-northeast-1
@@ -21,6 +21,8 @@ cloud:
 
 # RDB(RDSを使用)
 database:
+  # RDSのリージョン設定
+  rdsRegion: ${cloud.aws.region.static}
   common:
     data-source:
       # 各DBの共通設定
@@ -53,7 +55,7 @@ database:
 
 # upload directories
 upload:
-  bucketName: XXXX.YYYY.ZZZZ
+  bucketName: atrs.upload.private.dev
   temporaryDirectory: tmp/
   saveDirectory: save/
 
@@ -65,7 +67,7 @@ reservation:
 
 # static contents(CloudFrontを利用)
 content:
-  url: https://XXX.cloudfront.net
+  url: https://dwz9pxcwwzhm9.cloudfront.net
 
 # Logging
 logging:
@@ -73,8 +75,25 @@ logging:
   # Workaround for duplicated log files
   config: classpath:atrs-logback-spring.xml
 
-# Redis(ローカルPC上のRedis単一ノードを使用、デフォルト設定利用のため設定省略、RedisMessageListenerContainerのconcurrencyLimitのみ設定)
+# RedisMessageListenerContainerのconcurrencyLimit設定
 spring:
   redis:
     listener:
       concurrencyLimit: 2
+
+# Redis(Session用/Cache用)
+redis:
+  session:
+    server: 127.0.0.1
+    port: 6379
+    maxTotal: 8
+    maxIdle: 8
+    maxWaitMillis: -1
+    minIdle: 0
+  cache:
+    server: 127.0.0.1
+    port: 6379
+    maxTotal: 8
+    maxIdle: 8
+    maxWaitMillis: -1
+    minIdle: 0
