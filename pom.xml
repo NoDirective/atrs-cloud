@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>jp.co.ntt.atrs.cloud.aws</groupId>
     <artifactId>atrs-parent</artifactId>
-    <version>1.0.0.RELEASE</version>
+    <version>1.0.1.RELEASE</version>
     <packaging>pom</packaging>
     <modules>
         <module>/atrs-common</module>
@@ -16,7 +16,7 @@
     <parent>
         <groupId>org.terasoluna.gfw</groupId>
         <artifactId>terasoluna-gfw-parent</artifactId>
-        <version>5.4.0.RELEASE</version>
+        <version>5.4.1.RELEASE</version>
         <relativePath />
     </parent>
     <name>AIRLINE TICKET RESERVATION SYSTEM Parent POM</name>
