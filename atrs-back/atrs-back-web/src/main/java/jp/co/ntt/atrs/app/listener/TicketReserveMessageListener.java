@@ -48,11 +48,11 @@ public class TicketReserveMessageListener {
     public void receive(Reservation reservation,
             @Header(JmsHeaders.MESSAGE_ID) String messageId) {
 
-        try{
+        try {
             // 予約審査を実施
             reservationInspectionService.inspectAndNotify(reservation,
                     messageId);
-        }catch(DuplicateReceivingException e){
+        } catch (DuplicateReceivingException e) {
             // 2重受信の場合は処理をスキップする。
             return;
         }

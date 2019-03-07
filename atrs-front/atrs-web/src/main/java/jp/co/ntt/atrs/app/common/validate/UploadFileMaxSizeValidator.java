@@ -25,9 +25,8 @@ import org.springframework.web.multipart.MultipartFile;
  * ファイル最大サイズチェックアノテーション実装クラス
  * @author NTT 電電太郎
  */
-public class UploadFileMaxSizeValidator
-                                       implements
-                                       ConstraintValidator<UploadFileMaxSize, MultipartFile> {
+public class UploadFileMaxSizeValidator implements
+                                        ConstraintValidator<UploadFileMaxSize, MultipartFile> {
 
     /**
      * ファイル最大サイズチェックアノテーション

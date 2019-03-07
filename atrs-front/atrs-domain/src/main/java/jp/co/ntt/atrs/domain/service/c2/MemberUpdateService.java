@@ -47,5 +47,6 @@ public interface MemberUpdateService {
      * @param customerNo パスワードを確認する会員のお客様番号
      * @throws IOException
      */
-    void checkMemberPassword(String password, String customerNo) throws IOException;
+    void checkMemberPassword(String password,
+            String customerNo) throws IOException;
 }

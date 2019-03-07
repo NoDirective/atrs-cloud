@@ -16,6 +16,8 @@
  */
 package jp.co.ntt.atrs.domain.common.shard.interceptor;
 
+import java.util.Optional;
+
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.beans.factory.InitializingBean;
@@ -30,7 +32,7 @@ import jp.co.ntt.atrs.domain.common.shard.repository.AccountShardKeyRepository;
  * @author NTT 電電太郎
  */
 public class AccountShardInterceptor implements MethodInterceptor,
-                                    InitializingBean {
+                                     InitializingBean {
 
     /**
      * シャードアカウントのリポジトリー。
@@ -85,11 +87,11 @@ public class AccountShardInterceptor implements MethodInterceptor,
         String account = shardAccountHelper.getAccountValue(invocation);
         if (null != account) {
             // リポジトリ問い合わせ
-            ShardingAccount shardingAccount = accountShardKeyRepository
-                    .findOne(account);
+            Optional<ShardingAccount> shardingAccount = accountShardKeyRepository
+                    .findById(account);
             if (shardingAccount != null) {
                 // データソースキー取得
-                dataSourceKey = shardingAccount.getDataSourceKey();
+                dataSourceKey = shardingAccount.get().getDataSourceKey();
             }
         }
         dataSourceLookupKeyHolder.set(dataSourceKey);

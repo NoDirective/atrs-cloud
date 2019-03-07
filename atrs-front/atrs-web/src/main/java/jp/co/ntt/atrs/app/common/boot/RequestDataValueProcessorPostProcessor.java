@@ -33,7 +33,7 @@ import org.terasoluna.gfw.web.token.transaction.TransactionTokenRequestDataValue
 //FIXME RequestDataValueProcessorが上書きされ、トランザクショントークンが使用できない問題への暫定対処
 // ( issue : https://github.com/spring-projects/spring-boot/issues/4676 ) 
 public class RequestDataValueProcessorPostProcessor implements
-                                                   BeanDefinitionRegistryPostProcessor {
+                                                    BeanDefinitionRegistryPostProcessor {
 
     @Override
     public void postProcessBeanFactory(

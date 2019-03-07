@@ -30,10 +30,11 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean;
 // FIXME Filter型のBeanが二重にサーブレットコンテナに登録されてしまう問題への暫定対処
 // ( issue : http://stackoverflow.com/questions/28421966/prevent-spring-boot-from-registering-a-servlet-filter ) 
 public class DefaultFiltersBeanFactoryPostProcessor implements
-                                                   BeanFactoryPostProcessor {
+                                                    BeanFactoryPostProcessor {
 
     @Override
-    public void postProcessBeanFactory(ConfigurableListableBeanFactory bf) throws BeansException {
+    public void postProcessBeanFactory(
+            ConfigurableListableBeanFactory bf) throws BeansException {
         DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) bf;
 
         String[] beanNames = beanFactory.getBeanNamesForType(Filter.class);

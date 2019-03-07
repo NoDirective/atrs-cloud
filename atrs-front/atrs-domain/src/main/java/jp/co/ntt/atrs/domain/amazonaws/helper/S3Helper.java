@@ -24,6 +24,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.springframework.cloud.aws.core.io.s3.PathMatchingSimpleStorageResourcePatternResolver;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.WritableResource;
@@ -55,7 +57,6 @@ public class S3Helper {
     /**
      * リソースパタンリゾルバ。
      */
-    @Inject
     ResourcePatternResolver resourcePatternResolver;
 
     /**
@@ -63,6 +64,17 @@ public class S3Helper {
      */
     @Inject
     AmazonS3 s3client;
+
+    /**
+     * S3バケットを検索するためリソースパタンリゾルバをSpring Cloud AWSでラップする。
+     * @param applicationContext
+     * @param amazonS3
+     */
+    @Inject
+    public void setupResolver(ApplicationContext applicationContext,
+            AmazonS3 amazonS3) {
+        this.resourcePatternResolver = new PathMatchingSimpleStorageResourcePatternResolver(amazonS3, applicationContext);
+    }
 
     /**
      * 単一ファイルのアップロードを行う。
@@ -78,8 +90,9 @@ public class S3Helper {
         try (OutputStream out = resource.getOutputStream()) {
             copy(uploadFile, out);
         } catch (IOException e) {
-            throw new SystemException(LogMessages.E_AR_A0_L9003.getCode(), LogMessages.E_AR_A0_L9003
-                    .getMessage(bucketName), e);
+            throw new SystemException(LogMessages.E_AR_A0_L9003
+                    .getCode(), LogMessages.E_AR_A0_L9003.getMessage(
+                            bucketName), e);
         }
     }
 
@@ -97,8 +110,9 @@ public class S3Helper {
         try (InputStream in = resource.getInputStream()) {
             copy(in, downloadFile);
         } catch (IOException e) {
-            throw new SystemException(LogMessages.E_AR_A0_L9003.getCode(), LogMessages.E_AR_A0_L9003
-                    .getMessage(bucketName), e);
+            throw new SystemException(LogMessages.E_AR_A0_L9003
+                    .getCode(), LogMessages.E_AR_A0_L9003.getMessage(
+                            bucketName), e);
         }
     }
 
@@ -143,14 +157,15 @@ public class S3Helper {
             String targetDirectory, String targetFileName) {
         Resource source = getResource(sourceBucketName, sourceDirectory,
                 sourceFileName);
-        WritableResource target = getResource(targetBucketName,
-                targetDirectory, targetFileName);
-        try (InputStream in = source.getInputStream();
-                OutputStream out = target.getOutputStream()) {
+        WritableResource target = getResource(targetBucketName, targetDirectory,
+                targetFileName);
+        try (InputStream in = source.getInputStream(); OutputStream out = target
+                .getOutputStream()) {
             copy(in, out);
         } catch (IOException e) {
-            throw new SystemException(LogMessages.E_AR_A0_L9003.getCode(), LogMessages.E_AR_A0_L9003
-                    .getMessage(sourceBucketName + "," + targetBucketName), e);
+            throw new SystemException(LogMessages.E_AR_A0_L9003
+                    .getCode(), LogMessages.E_AR_A0_L9003.getMessage(
+                            sourceBucketName + "," + targetBucketName), e);
         }
     }
 
@@ -163,8 +178,8 @@ public class S3Helper {
         try {
             return new AmazonS3URI(resource.getURI());
         } catch (IOException e) {
-            throw new SystemException(LogMessages.E_AR_A0_L9003.getCode(), LogMessages.E_AR_A0_L9003
-                    .getMessage(), e);
+            throw new SystemException(LogMessages.E_AR_A0_L9003
+                    .getCode(), LogMessages.E_AR_A0_L9003.getMessage(), e);
         }
     }
 
@@ -179,13 +194,13 @@ public class S3Helper {
     public Resource[] fileSearch(String bucketName, String directory,
             String pattern) {
         try {
-            return resourcePatternResolver
-                    .getResources(AWSConstants.S3_PROTOCOL_PREFIX
-                            .getConstants()
-                            + bucketName + "/" + directory + pattern);
+            return resourcePatternResolver.getResources(
+                    AWSConstants.S3_PROTOCOL_PREFIX.getConstants() + bucketName
+                            + "/" + directory + pattern);
         } catch (IOException e) {
-            throw new SystemException(LogMessages.E_AR_A0_L9003.getCode(), LogMessages.E_AR_A0_L9003
-                    .getMessage(bucketName), e);
+            throw new SystemException(LogMessages.E_AR_A0_L9003
+                    .getCode(), LogMessages.E_AR_A0_L9003.getMessage(
+                            bucketName), e);
         }
     }
 
@@ -196,11 +211,10 @@ public class S3Helper {
      * @param fileName ファイル名
      * @return WritableResource
      */
-    public WritableResource getResource(String bucketName,
-            String putDirectory, String fileName) {
+    public WritableResource getResource(String bucketName, String putDirectory,
+            String fileName) {
         AmazonS3URI tempUri = new AmazonS3URI(AWSConstants.S3_PROTOCOL_PREFIX
-                .getConstants()
-                + bucketName + "/" + putDirectory + fileName);
+                .getConstants() + bucketName + "/" + putDirectory + fileName);
         return (WritableResource) resourceLoader.getResource(tempUri.getURI()
                 .toString());
     }

@@ -51,7 +51,8 @@ public interface FlightRepository {
             @Param("pageable") Pageable pageable);
 
     /**
-     * 指定したフライトのフライト情報を排他ロックをかけて取得する。</p>
+     * 指定したフライトのフライト情報を排他ロックをかけて取得する。
+     * </p>
      * @param departureDate 搭乗日
      * @param flightName 便名
      * @param boardingClass 搭乗クラス

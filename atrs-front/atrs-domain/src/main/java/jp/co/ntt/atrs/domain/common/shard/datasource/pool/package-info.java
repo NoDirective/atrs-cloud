@@ -17,6 +17,5 @@
 /**
  * プールのパッケージ。
  * @author NTT 電電花子
- *
  */
 package jp.co.ntt.atrs.domain.common.shard.datasource.pool;

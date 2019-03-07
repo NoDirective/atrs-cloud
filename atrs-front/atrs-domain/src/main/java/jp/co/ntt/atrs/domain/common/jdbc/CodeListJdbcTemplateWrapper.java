@@ -41,7 +41,8 @@ public class CodeListJdbcTemplateWrapper {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Cacheable(key = "'codelist/' + #codeListId")
-    public List<Map<String, Object>> queryForList(String sql, String codeListId) {
+    public List<Map<String, Object>> queryForList(String sql,
+            String codeListId) {
         if (logger.isDebugEnabled()) {
             logger.debug("add cache codelists codeListId={}", codeListId);
         }

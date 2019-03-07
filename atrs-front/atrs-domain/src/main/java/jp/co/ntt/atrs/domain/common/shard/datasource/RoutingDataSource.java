@@ -31,8 +31,8 @@ public class RoutingDataSource extends AbstractRoutingDataSource {
     /**
      * ロガー。
      */
-    private static final Logger LOGGER = LoggerFactory
-            .getLogger(RoutingDataSource.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(
+            RoutingDataSource.class);
 
     /**
      * デフォルトスキーマ名。<br>
@@ -40,7 +40,6 @@ public class RoutingDataSource extends AbstractRoutingDataSource {
      */
     @Value("${database.default.schema.name:default}")
     private String databaseDefaultSchemaName;
-
 
     /**
      * データソースのキー(シャードキー)を保持するホルダ。

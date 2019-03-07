@@ -16,6 +16,16 @@ cloud:
 
 # actuator
 management:
-  context-path: /management
+  endpoints:
+    web:
+      base-path: /management
+    # Set all actuator endpoints disabled by default
+    enabled-by-default: false
+  endpoint:
+    health:
+      # Disable sensitive filter for the health endpoint
+      show-details: ALWAYS
+      # Enable only health endpoint
+      enabled: true
   security:
     enabled: false

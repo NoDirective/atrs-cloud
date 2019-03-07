@@ -38,6 +38,8 @@ public class TopPage {
         $(byId("headerCustomerNo")).setValue(userID);
         $(byId("headerPassword")).setValue(password);
         $(".button").click();
+        // ログインが完了したことを確認してPageを返す。
+        $(byId("header-content")).waitUntil(text("ログアウト"), 2000);
         return this;
     }
 
@@ -81,7 +83,7 @@ public class TopPage {
     }
 
     /**
-     * 空席状況を紹介する。
+     * 空席状況を照会する。
      * @param airport 空港名
      * @return FlightSearchResultPage 空席照会結果ページ
      */

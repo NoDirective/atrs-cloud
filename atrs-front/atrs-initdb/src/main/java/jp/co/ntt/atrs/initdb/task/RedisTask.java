@@ -116,9 +116,8 @@ public class RedisTask extends Task {
                 && StringUtils.isEmpty(redisClusterNodes)) {
             sb.append("Redisホストと").append(" Redisポート").append(" または、").append(
                     " RedisClusterNodes");
-        } else if (!StringUtils.isEmpty(redisHost)
-                && StringUtils.isEmpty(redisPort)
-                && StringUtils.isEmpty(redisClusterNodes)) {
+        } else if (!StringUtils.isEmpty(redisHost) && StringUtils.isEmpty(
+                redisPort) && StringUtils.isEmpty(redisClusterNodes)) {
             sb.append(" Redisポート");
         }
         if (sb.length() > 0) {

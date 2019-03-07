@@ -81,8 +81,7 @@ public class UserUpdatePage {
      * @param imgPath 画像のファイルパス
      * @return UserUpdatePage ユーザ情報更新ページ
      */
-    public UserUpdatePage setMemberInfo(MemberBean member,
-            String imgPath) {
+    public UserUpdatePage setMemberInfo(MemberBean member, String imgPath) {
 
         File img = new File(imgPath);
 

@@ -28,7 +28,6 @@ import javax.inject.Inject;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.cloud.aws.autoconfigure.actuate.CloudWatchMetricProperties;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.util.StringUtils;
 
@@ -57,6 +56,9 @@ public class CloudWatchMetricSender implements InitializingBean {
     @Value("${cloud.aws.cloudwatch.region}")
     String region;
 
+    @Value("${cloud.aws.cloudwatch.namespace:}")
+    String namespace;
+
     /**
      * autoScalingGroupName名。<br>
      * デフォルトは、<code>spring.application.name</code>を使用する。変更する場合は、<code>custom.metric.auto-scaling-group-name<code>で設定可能。
@@ -64,13 +66,9 @@ public class CloudWatchMetricSender implements InitializingBean {
     @Value("${spring.application.name:autoScalingGroupName}")
     String autoScalingGroupName;
 
-    @Inject
-    CloudWatchMetricProperties cloudWatchMetricProperties;
-
     AmazonCloudWatch amazonCloudWatch;
 
     String instanceId;
-
 
     @Scheduled(fixedRate = 5000)
     public void sendCloudWatch() {
@@ -81,38 +79,35 @@ public class CloudWatchMetricSender implements InitializingBean {
 
         Dimension AutoScalingGroupNameDimension = new Dimension().withName(
                 "AutoScalingGroupName").withValue(autoScalingGroupName);
-        PutMetricDataRequest request = new PutMetricDataRequest()
-                .withNamespace(cloudWatchMetricProperties.getNamespace())
-                .withMetricData(
-                // Used
+        PutMetricDataRequest request = new PutMetricDataRequest().withNamespace(
+                namespace).withMetricData(
+                        // Used
                         new MetricDatum().withDimensions(InstanceIdDimension,
                                 AutoScalingGroupNameDimension).withMetricName(
-                                "HeapMemory.Used").withUnit(
-                                StandardUnit.Bytes.toString()).withValue(
-                                (double) heapUsage.getUsed()),
+                                        "HeapMemory.Used").withUnit(
+                                                StandardUnit.Bytes.toString())
+                                .withValue((double) heapUsage.getUsed()),
                         // Max
                         new MetricDatum().withDimensions(InstanceIdDimension,
                                 AutoScalingGroupNameDimension).withMetricName(
-                                "HeapMemory.Max").withUnit(
-                                StandardUnit.Bytes.toString()).withValue(
-                                (double) heapUsage.getMax()),
+                                        "HeapMemory.Max").withUnit(
+                                                StandardUnit.Bytes.toString())
+                                .withValue((double) heapUsage.getMax()),
                         // Committed
                         new MetricDatum().withDimensions(InstanceIdDimension,
                                 AutoScalingGroupNameDimension).withMetricName(
-                                "HeapMemory.Committed").withUnit(
-                                StandardUnit.Bytes.toString()).withValue(
-                                (double) heapUsage.getCommitted()),
+                                        "HeapMemory.Committed").withUnit(
+                                                StandardUnit.Bytes.toString())
+                                .withValue((double) heapUsage.getCommitted()),
                         // Utilization
-                        new MetricDatum()
-                                .withDimensions(InstanceIdDimension,
-                                        AutoScalingGroupNameDimension)
-                                .withMetricName("HeapMemory.Utilization")
-                                .withUnit(StandardUnit.Percent.toString())
-                                .withValue(
-                                        100 * ((double) heapUsage.getUsed() / (double) heapUsage
-                                                .getMax()))
+                        new MetricDatum().withDimensions(InstanceIdDimension,
+                                AutoScalingGroupNameDimension).withMetricName(
+                                        "HeapMemory.Utilization").withUnit(
+                                                StandardUnit.Percent.toString())
+                                .withValue(100 * ((double) heapUsage.getUsed()
+                                        / (double) heapUsage.getMax()))
 
-                );
+        );
 
         amazonCloudWatch.putMetricData(request);
     }
@@ -139,8 +134,8 @@ public class CloudWatchMetricSender implements InitializingBean {
             this.amazonCloudWatch = AmazonCloudWatchClientBuilder
                     .defaultClient();
         } else {
-            this.amazonCloudWatch = AmazonCloudWatchClientBuilder
-                    .standard().withRegion(region).build();
+            this.amazonCloudWatch = AmazonCloudWatchClientBuilder.standard()
+                    .withRegion(region).build();
         }
 
         try {

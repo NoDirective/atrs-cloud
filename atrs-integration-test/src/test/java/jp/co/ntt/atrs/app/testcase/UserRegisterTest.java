@@ -16,7 +16,6 @@
  */
 package jp.co.ntt.atrs.app.testcase;
 
-
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selectors.byId;
 import static com.codeborne.selenide.Selenide.$;
@@ -32,11 +31,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.WebDriverRunner;
+
+import io.github.bonigarcia.wdm.FirefoxDriverManager;
 import jp.co.ntt.atrs.app.bean.MemberBean;
 import jp.co.ntt.atrs.app.page.TopPage;
 import jp.co.ntt.atrs.app.page.UserDetailPage;
 import jp.co.ntt.atrs.domain.model.Gender;
-
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -51,8 +53,17 @@ public class UserRegisterTest {
 
     private MemberBean member;
 
+    @Value("${target.geckodriverVersion}")
+    private String geckodriverVersion;
+
     @Before
     public void setUp() {
+        // 生成するドライバのインスタンスを取得
+        if (System.getProperty("webdriver.gecko.driver") == null) {
+            FirefoxDriverManager.getInstance().version(geckodriverVersion)
+                    .setup();
+        }
+        Configuration.browser = WebDriverRunner.MARIONETTE;
 
         // 登録する初期ユーザ情報を設定する。
         member = new MemberBean();
@@ -84,7 +95,7 @@ public class UserRegisterTest {
     public void tearDown() {
         // ログイン状態の場合ログアウトする。
         TopPage topPage = open(applicationContextUrl, TopPage.class);
-        if(topPage.isLoggedIn()){
+        if (topPage.isLoggedIn()) {
             topPage.logout();
         }
     }
@@ -100,9 +111,9 @@ public class UserRegisterTest {
 
         // ユーザ登録
         // テスト実行
-        open(applicationContextUrl, TopPage.class)
-        .toUserRegisterPage().setMemberInfo(member, imgPathW)
-        .toRegisterConfirmPage().registerUser();
+        open(applicationContextUrl, TopPage.class).toUserRegisterPage()
+                .setMemberInfo(member, imgPathW).toRegisterConfirmPage()
+                .registerUser();
 
         // 証跡の取得
         screenshot("registerAndUpdateUserTest" + "_Registered");
@@ -126,17 +137,13 @@ public class UserRegisterTest {
         member.setTel3("5678");
 
         // テスト実行
-        open(applicationContextUrl, TopPage.class)
-        .login(member.getUserId(), member.getPassword())
-        .toUserDetailPage();
+        open(applicationContextUrl, TopPage.class).login(member.getUserId(),
+                member.getPassword()).toUserDetailPage();
         // ユーザ情報更新前の証跡の取得
         screenshot("registerAndUpdateUserTest" + "_beforeUpdate");
         // ユーザ更新
-        page(UserDetailPage.class)
-        .toUserUpdatePage()
-        .setMemberInfo(member, imgPathB)
-        .toUpdateConfirmPage()
-        .updateUser();
+        page(UserDetailPage.class).toUserUpdatePage().setMemberInfo(member,
+                imgPathB).toUpdateConfirmPage().updateUser();
 
         // ユーザ情報更新後の証跡の取得
         screenshot("registerAndUpdateUserTest" + "_afterUpdate");

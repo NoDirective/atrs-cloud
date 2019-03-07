@@ -16,6 +16,7 @@
  */
 package jp.co.ntt.atrs.app.page;
 
+import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
 
 public class UserRegisterConfimPage {
@@ -25,6 +26,8 @@ public class UserRegisterConfimPage {
      * @return UserRegisterCompletePage ユーザ情報登録完了ページ
      */
     public UserRegisterCompletePage registerUser() {
+        // 登録ボタンの状態を確認してクリック。
+        $(".forward").waitUntil(text("登録"), 2000);
         $(".forward").click();
         return new UserRegisterCompletePage();
     }

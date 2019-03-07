@@ -49,9 +49,9 @@ database:
       dbInstanceIdentifier: cn-performance-db1
       driverUrlOption: socketTimeout=120&connectTimeout=120
     - schema: atrs1
-      url: jdbc:postgresql://cn-performance-db2.XXXX.ap-northeast-1.rds.amazonaws.com:5432/atrs?socketTimeout=120&connectTimeout=120
+      url: jdbc:postgresql://cn-performance-db2.xxxx.ap-northeast-1.rds.amazonaws.com:5432/atrs?socketTimeout=120&connectTimeout=120
     - schema: atrs2
-      url: jdbc:postgresql://cn-performance-db3.XXXX.ap-northeast-1.rds.amazonaws.com:5432/atrs?socketTimeout=120&connectTimeout=120
+      url: jdbc:postgresql://cn-performance-db3.xxxx.ap-northeast-1.rds.amazonaws.com:5432/atrs?socketTimeout=120&connectTimeout=120
 
 # upload directories
 upload:

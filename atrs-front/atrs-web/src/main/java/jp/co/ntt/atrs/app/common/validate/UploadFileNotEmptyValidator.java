@@ -26,9 +26,8 @@ import org.springframework.web.multipart.MultipartFile;
  * 空ファイルチェックアノテーション実装クラス
  * @author NTT 電電太郎
  */
-public class UploadFileNotEmptyValidator
-                                        implements
-                                        ConstraintValidator<UploadFileNotEmpty, MultipartFile> {
+public class UploadFileNotEmptyValidator implements
+                                         ConstraintValidator<UploadFileNotEmpty, MultipartFile> {
 
     /**
      * 空ファイルチェックアノテーション
@@ -55,8 +54,8 @@ public class UploadFileNotEmptyValidator
         if (!constraint.check()) {
             return true;
         }
-        if (multipartFile == null
-                || !StringUtils.hasLength(multipartFile.getOriginalFilename())) {
+        if (multipartFile == null || !StringUtils.hasLength(multipartFile
+                .getOriginalFilename())) {
             return true;
         }
         return !multipartFile.isEmpty();

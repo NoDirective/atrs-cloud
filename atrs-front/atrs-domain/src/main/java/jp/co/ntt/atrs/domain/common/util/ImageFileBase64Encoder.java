@@ -41,7 +41,8 @@ public class ImageFileBase64Encoder {
      * @return 変換後の文字列
      * @throws IOException
      */
-    public String encodeBase64(InputStream inputStream, String fileExtension) throws IOException {
+    public String encodeBase64(InputStream inputStream,
+            String fileExtension) throws IOException {
         BufferedImage image = ImageIO.read(inputStream);
         image.flush();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();

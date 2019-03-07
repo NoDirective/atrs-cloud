@@ -26,7 +26,7 @@ import org.terasoluna.gfw.common.exception.ExceptionCodeProvider;
  * @author NTT 電電太郎
  */
 public class BadRequestException extends RuntimeException implements
-                                                         ExceptionCodeProvider {
+                                 ExceptionCodeProvider {
 
     /**
      * serialVersionUID。
