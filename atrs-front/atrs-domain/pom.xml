@@ -7,7 +7,7 @@
     <parent>
         <groupId>jp.co.ntt.atrs.cloud.aws</groupId>
         <artifactId>atrs-front</artifactId>
-        <version>1.0.1.RELEASE</version>
+        <version>1.1.0.RELEASE</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 

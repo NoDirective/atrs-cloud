@@ -123,7 +123,8 @@ public class Flight implements Serializable {
     }
 
     /**
-     * 搭乗クラスを取得する。</p>
+     * 搭乗クラスを取得する。
+     * </p>
      * @return 搭乗クラス
      */
     public BoardingClass getBoardingClass() {

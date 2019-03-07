@@ -36,7 +36,6 @@ public class DatabaseProperties {
 
     /**
      * データソース情報を格納する {@link List}を取得する。
-     *
      * @return dataSources
      */
     public List<Map<String, String>> getDataSources() {
@@ -45,7 +44,6 @@ public class DatabaseProperties {
 
     /**
      * データソース情報を格納する {@link List}を設定する。
-     *
      * @param dataSources セットする dataSources
      */
     public void setDataSources(List<Map<String, String>> dataSources) {

@@ -37,8 +37,8 @@ public class ReservationSharedServiceImpl implements ReservationSharedService {
     /**
      * ロガー。
      */
-    private static final Logger LOGGER = LoggerFactory
-            .getLogger(ReservationSharedServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(
+            ReservationSharedServiceImpl.class);
 
     /**
      * メール送信部品

@@ -42,7 +42,8 @@ public class ShardAccountHelper {
      * @return シャードアカウント
      * @throws Exception
      */
-    public String getAccountValue(MethodInvocation invocation) throws IllegalArgumentException {
+    public String getAccountValue(
+            MethodInvocation invocation) throws IllegalArgumentException {
         String ret = null;
         // 実行対象のオブジェクトを取得
         Object target = invocation.getThis();
@@ -106,8 +107,7 @@ public class ShardAccountHelper {
             if (values.length == 1) {
                 ret = obj.toString();
             } else {
-                String exp = value.substring(value.indexOf(".")
-                        + 1);
+                String exp = value.substring(value.indexOf(".") + 1);
                 ExpressionParser expressionParser = new SpelExpressionParser();
                 Expression expression = expressionParser.parseExpression(exp);
                 ret = expression.getValue(obj, String.class);

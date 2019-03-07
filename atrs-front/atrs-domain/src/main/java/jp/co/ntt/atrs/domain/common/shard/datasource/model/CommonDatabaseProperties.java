@@ -35,7 +35,6 @@ public class CommonDatabaseProperties {
 
     /**
      * データソース情報を格納する {@link Map}を取得する。
-     *
      * @return dataSource
      */
     public Map<String, String> getDataSource() {
@@ -44,7 +43,6 @@ public class CommonDatabaseProperties {
 
     /**
      * データソース情報を格納する {@link Map}を設定する。
-     *
      * @param dataSource セットする dataSource
      */
     public void setDataSource(Map<String, String> dataSource) {

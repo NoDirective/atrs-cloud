@@ -122,7 +122,7 @@ public class TicketReserveServiceImpl implements TicketReserveService {
 
         // 運賃から合計金額を計算する。
         // 合計金額 = 往路の合計金額 + 復路の合計金額
-        // フライト単位の合計金額 = 運賃 × 搭乗者数(12歳以上)　+ (基本運賃 × 小児運賃の比率 - 運賃種別ごとの割引額) × 搭乗者数（12歳未満)
+        // フライト単位の合計金額 = 運賃 × 搭乗者数(12歳以上) + (基本運賃 × 小児運賃の比率 - 運賃種別ごとの割引額) × 搭乗者数（12歳未満)
         // 運賃種別ごとの割引額 = 基本運賃 × 割引率
 
         // 合計金額にフライト単位の合計金額を加算する。
@@ -134,14 +134,14 @@ public class TicketReserveServiceImpl implements TicketReserveService {
             Route route = flight.getFlightMaster().getRoute();
             int baseFare = ticketSharedService.calculateBasicFare(route
                     .getBasicFare(), flight.getBoardingClass()
-                    .getBoardingClassCd(), flight.getDepartureDate());
+                            .getBoardingClassCd(), flight.getDepartureDate());
 
             int discountRate = flight.getFareType().getDiscountRate();
             int boardingFare = ticketSharedService.calculateFare(baseFare,
                     discountRate);
 
-            int fare = boardingFare * adultNum + baseFare
-                    * (childFareRate - discountRate) / 100 * childNum;
+            int fare = boardingFare * adultNum + baseFare * (childFareRate
+                    - discountRate) / 100 * childNum;
 
             // 合計金額
             totalFare += fare;
@@ -159,7 +159,8 @@ public class TicketReserveServiceImpl implements TicketReserveService {
      */
     @Override
     @Transactional(readOnly = true)
-    public void validateReservation(Reservation reservation) throws BusinessException {
+    public void validateReservation(
+            Reservation reservation) throws BusinessException {
         Assert.notNull(reservation, "reservation must not be null");
         Assert.notEmpty(reservation.getReserveFlightList(),
                 "reserveFlightList must contain elements");
@@ -210,19 +211,19 @@ public class TicketReserveServiceImpl implements TicketReserveService {
                 if (StringUtils.hasLength(passengerCustomerNo)) {
 
                     // 搭乗者のカード会員情報を取得する。
-                    Member passengerMember = memberRepository
-                            .findOne(passengerCustomerNo);
+                    Member passengerMember = memberRepository.findOne(
+                            passengerCustomerNo);
 
                     if (passengerMember == null) {
                         throw new AtrsBusinessException(TicketReserveErrorCode.E_AR_B2_2007, position);
                     }
 
                     // 取得した搭乗者のカード会員情報と搭乗者情報が同一であることを確認する。
-                    if (!(passenger.getFamilyName().equals(
-                            passengerMember.getKanaFamilyName())
-                            && passenger.getGivenName().equals(
-                                    passengerMember.getKanaGivenName()) && passenger
-                            .getGender().equals(passengerMember.getGender()))) {
+                    if (!(passenger.getFamilyName().equals(passengerMember
+                            .getKanaFamilyName()) && passenger.getGivenName()
+                                    .equals(passengerMember.getKanaGivenName())
+                            && passenger.getGender().equals(passengerMember
+                                    .getGender()))) {
                         throw new AtrsBusinessException(TicketReserveErrorCode.E_AR_B2_2008, position);
                     }
                 }
@@ -237,7 +238,8 @@ public class TicketReserveServiceImpl implements TicketReserveService {
      * @param reservation 予約情報
      * @throws AtrsBusinessException チェック失敗例外
      */
-    private void validateRepresentativeMemberInfo(Reservation reservation) throws AtrsBusinessException {
+    private void validateRepresentativeMemberInfo(
+            Reservation reservation) throws AtrsBusinessException {
         // 予約代表者お客様番号を取得する。
         String repCustomerNo = reservation.getRepMember().getCustomerNo();
 
@@ -253,11 +255,11 @@ public class TicketReserveServiceImpl implements TicketReserveService {
             }
 
             // 取得した予約代表者のカード会員情報と予約代表者情報が同一であることを確認する。
-            if (!(reservation.getRepFamilyName().equals(
-                    repMember.getKanaFamilyName())
-                    && reservation.getRepGivenName().equals(
-                            repMember.getKanaGivenName()) && reservation
-                    .getRepGender().equals(repMember.getGender()))) {
+            if (!(reservation.getRepFamilyName().equals(repMember
+                    .getKanaFamilyName()) && reservation.getRepGivenName()
+                            .equals(repMember.getKanaGivenName()) && reservation
+                                    .getRepGender().equals(repMember
+                                            .getGender()))) {
                 throw new AtrsBusinessException(TicketReserveErrorCode.E_AR_B2_2005);
             }
         }
@@ -268,7 +270,8 @@ public class TicketReserveServiceImpl implements TicketReserveService {
      * @param reserveFlightList 予約フライト情報一覧
      * @throws AtrsBusinessException チェック失敗例外
      */
-    private void validateFareType(List<ReserveFlight> reserveFlightList) throws AtrsBusinessException {
+    private void validateFareType(
+            List<ReserveFlight> reserveFlightList) throws AtrsBusinessException {
         for (ReserveFlight reserveFlight : reserveFlightList) {
 
             Assert.notNull(reserveFlight, "reserveFlight must not be null");
@@ -327,8 +330,9 @@ public class TicketReserveServiceImpl implements TicketReserveService {
 
         int reservationInsertCount = reservationRepository.insert(reservation);
         if (reservationInsertCount != 1) {
-            throw new SystemException(LogMessages.E_AR_A0_L9002.getCode(), LogMessages.E_AR_A0_L9002
-                    .getMessage(reservationInsertCount, 1));
+            throw new SystemException(LogMessages.E_AR_A0_L9002
+                    .getCode(), LogMessages.E_AR_A0_L9002.getMessage(
+                            reservationInsertCount, 1));
         }
         // 予約番号を取得する
         String reserveNo = reservation.getReserveNo();
@@ -343,20 +347,21 @@ public class TicketReserveServiceImpl implements TicketReserveService {
             int reserveFlightInsertCount = reservationRepository
                     .insertReserveFlight(reserveFlight);
             if (reserveFlightInsertCount != 1) {
-                throw new SystemException(LogMessages.E_AR_A0_L9002.getCode(), LogMessages.E_AR_A0_L9002
-                        .getMessage(reserveFlightInsertCount, 1));
+                throw new SystemException(LogMessages.E_AR_A0_L9002
+                        .getCode(), LogMessages.E_AR_A0_L9002.getMessage(
+                                reserveFlightInsertCount, 1));
             }
 
             // 全搭乗者情報を登録する。
             for (Passenger passenger : reserveFlight.getPassengerList()) {
-                passenger
-                        .setReserveFlightNo(reserveFlight.getReserveFlightNo());
+                passenger.setReserveFlightNo(reserveFlight
+                        .getReserveFlightNo());
                 int passengerInsertCount = reservationRepository
                         .insertPassenger(passenger);
                 if (passengerInsertCount != 1) {
                     throw new SystemException(LogMessages.E_AR_A0_L9002
                             .getCode(), LogMessages.E_AR_A0_L9002.getMessage(
-                            passengerInsertCount, 1));
+                                    passengerInsertCount, 1));
                 }
             }
         }
@@ -395,8 +400,8 @@ public class TicketReserveServiceImpl implements TicketReserveService {
             // 空席数を更新するために、フライト情報を取得する（排他）。
             flight = flightRepository.findOneForUpdate(flight
                     .getDepartureDate(), flight.getFlightMaster()
-                    .getFlightName(), flight.getBoardingClass(), flight
-                    .getFareType());
+                            .getFlightName(), flight.getBoardingClass(), flight
+                                    .getFareType());
             int vacantNum = flight.getVacantNum();
 
             // 搭乗者数
@@ -414,8 +419,9 @@ public class TicketReserveServiceImpl implements TicketReserveService {
             // 空席数を更新する。
             int flightUpdateCount = flightRepository.update(flight);
             if (flightUpdateCount != 1) {
-                throw new SystemException(LogMessages.E_AR_A0_L9002.getCode(), LogMessages.E_AR_A0_L9002
-                        .getMessage(flightUpdateCount, 1));
+                throw new SystemException(LogMessages.E_AR_A0_L9002
+                        .getCode(), LogMessages.E_AR_A0_L9002.getMessage(
+                                flightUpdateCount, 1));
             }
         }
 

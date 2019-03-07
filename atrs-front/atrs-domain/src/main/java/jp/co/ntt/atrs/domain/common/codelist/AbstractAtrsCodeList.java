@@ -29,10 +29,9 @@ import jp.co.ntt.atrs.domain.common.jdbc.CodeListJdbcTemplateWrapper;
  * Abstract implementation of reloadable {@link CodeList}
  * @author NTT 電電太郎
  */
-public abstract class AbstractAtrsCodeList extends AbstractCodeList
-                                                                   implements
-                                                                   ReloadableCodeList,
-                                                                   InitializingBean {
+public abstract class AbstractAtrsCodeList extends AbstractCodeList implements
+                                           ReloadableCodeList,
+                                           InitializingBean {
 
     /**
      * Lazy initialization flag

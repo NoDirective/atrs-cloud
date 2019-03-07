@@ -46,11 +46,11 @@ database:
       name: default
   data-sources:
     - schema: default
-      url: jdbc:postgresql://cn-int-db-test1.XXXX.ap-northeast-1.rds.amazonaws.com:5432/atrs?socketTimeout=120&connectTimeout=120
+      url: jdbc:postgresql://cn-int-db-test1.xxxx.ap-northeast-1.rds.amazonaws.com:5432/atrs?socketTimeout=120&connectTimeout=120
     - schema: atrs1
-      url: jdbc:postgresql://cn-int-db-test2.XXXX.ap-northeast-1.rds.amazonaws.com:5432/atrs?socketTimeout=120&connectTimeout=120
+      url: jdbc:postgresql://cn-int-db-test2.xxxx.ap-northeast-1.rds.amazonaws.com:5432/atrs?socketTimeout=120&connectTimeout=120
     - schema: atrs2
-      url: jdbc:postgresql://cn-int-db-test3.XXXX.ap-northeast-1.rds.amazonaws.com:5432/atrs?socketTimeout=120&connectTimeout=120
+      url: jdbc:postgresql://cn-int-db-test3.xxxx.ap-northeast-1.rds.amazonaws.com:5432/atrs?socketTimeout=120&connectTimeout=120
 
 # upload directories
 upload:

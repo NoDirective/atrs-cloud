@@ -40,7 +40,9 @@ public class S3HealthIndicator extends AbstractHealthIndicator {
 
     /*
      * (非 Javadoc)
-     * @see org.springframework.boot.actuate.health.AbstractHealthIndicator#doHealthCheck(org.springframework.boot.actuate.health.Health.Builder)
+     * @see
+     * org.springframework.boot.actuate.health.AbstractHealthIndicator#doHealthCheck(org.springframework.boot.actuate.health.
+     * Health.Builder)
      */
     @Override
     protected void doHealthCheck(Builder builder) throws Exception {
@@ -50,8 +52,8 @@ public class S3HealthIndicator extends AbstractHealthIndicator {
         }
         try {
             String bucket = new AmazonS3URI(uri).getBucket();
-            builder.up().withDetail("uri", uri).withDetail("location",
-                    amazonS3.getBucketLocation(bucket));
+            builder.up().withDetail("uri", uri).withDetail("location", amazonS3
+                    .getBucketLocation(bucket));
         } catch (Exception e) {
             builder.down(e);
         }

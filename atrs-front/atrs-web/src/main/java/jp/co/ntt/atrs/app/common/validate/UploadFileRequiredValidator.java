@@ -26,9 +26,8 @@ import org.springframework.web.multipart.MultipartFile;
  * ファイルアップロード必須チェック実行クラス
  * @author NTT 電電太郎
  */
-public class UploadFileRequiredValidator
-                                        implements
-                                        ConstraintValidator<UploadFileRequired, MultipartFile> {
+public class UploadFileRequiredValidator implements
+                                         ConstraintValidator<UploadFileRequired, MultipartFile> {
 
     /**
      * ファイルアップロード必須チェックアノテーション
@@ -55,8 +54,8 @@ public class UploadFileRequiredValidator
         if (!constraint.check()) {
             return true;
         }
-        return multipartFile != null
-                && StringUtils.hasLength(multipartFile.getOriginalFilename());
+        return multipartFile != null && StringUtils.hasLength(multipartFile
+                .getOriginalFilename());
     }
 
 }

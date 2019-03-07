@@ -137,8 +137,9 @@ public class MemberUpdateServiceImpl implements MemberUpdateService {
         // ユーザ情報変更を実施し、登録情報の更新を行う。
         int updateMemberCount = memberRepository.update(member);
         if (updateMemberCount != 1) {
-            throw new SystemException(LogMessages.E_AR_A0_L9002.getCode(), LogMessages.E_AR_A0_L9002
-                    .getMessage(updateMemberCount, 1));
+            throw new SystemException(LogMessages.E_AR_A0_L9002
+                    .getCode(), LogMessages.E_AR_A0_L9002.getMessage(
+                            updateMemberCount, 1));
         }
 
         // パスワードの変更がある場合のみMemberLoginを更新する。
@@ -150,11 +151,12 @@ public class MemberUpdateServiceImpl implements MemberUpdateService {
                     .getMemberLogin().getPassword()));
 
             // MemberLoginの更新
-            int updateMemberLoginCount = memberRepository
-                    .updateMemberLogin(member);
+            int updateMemberLoginCount = memberRepository.updateMemberLogin(
+                    member);
             if (updateMemberLoginCount != 1) {
-                throw new SystemException(LogMessages.E_AR_A0_L9002.getCode(), LogMessages.E_AR_A0_L9002
-                        .getMessage(updateMemberLoginCount, 1));
+                throw new SystemException(LogMessages.E_AR_A0_L9002
+                        .getCode(), LogMessages.E_AR_A0_L9002.getMessage(
+                                updateMemberLoginCount, 1));
             }
         }
 
@@ -167,13 +169,15 @@ public class MemberUpdateServiceImpl implements MemberUpdateService {
             // 新規ファイル保存
             String s3PhotoFileName = member.getCustomerNo() + "_" + UUID
                     .randomUUID().toString() + ".jpg";
-            s3Helper.fileCopy(bucketName, tmpDirectory, member.getPhotoFileName(),
-                    bucketName, saveDirectory, s3PhotoFileName);
+            s3Helper.fileCopy(bucketName, tmpDirectory, member
+                    .getPhotoFileName(), bucketName, saveDirectory,
+                    s3PhotoFileName);
 
             // 旧ファイルおよび一時ファイルの削除
             List<String> deleteKeyList = new ArrayList<String>();
             for (Resource oldPhotoResource : oldPhotoResources) {
-                AmazonS3URI deleteURI = s3Helper.getAmazonS3URI(oldPhotoResource);
+                AmazonS3URI deleteURI = s3Helper.getAmazonS3URI(
+                        oldPhotoResource);
                 deleteKeyList.add(deleteURI.getKey());
             }
             deleteKeyList.add(tmpDirectory + member.getPhotoFileName());
@@ -195,7 +199,8 @@ public class MemberUpdateServiceImpl implements MemberUpdateService {
      * {@inheritDoc}
      */
     @Override
-    public void checkMemberPassword(String password, String customerNo) throws IOException {
+    public void checkMemberPassword(String password,
+            String customerNo) throws IOException {
 
         if (StringUtils.hasLength(password)) {
             // DBから正しいパスワードを取得

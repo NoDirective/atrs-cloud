@@ -17,6 +17,5 @@
 /**
  * ヘルパのパッケージ。
  * @author NTT 電電花子
- *
  */
 package jp.co.ntt.atrs.domain.common.masterdata.helper;

@@ -27,9 +27,8 @@ import org.springframework.web.multipart.MultipartFile;
  * jpg拡張子チェックアノテーション実装クラス
  * @author NTT 電電太郎
  */
-public class UploadFileJpgExtensionValidator
-                                            implements
-                                            ConstraintValidator<UploadFileJpgExtension, MultipartFile> {
+public class UploadFileJpgExtensionValidator implements
+                                             ConstraintValidator<UploadFileJpgExtension, MultipartFile> {
 
     /**
      * jpg拡張子チェックアノテーション
@@ -56,8 +55,8 @@ public class UploadFileJpgExtensionValidator
         if (!constraint.check()) {
             return true;
         }
-        if (multipartFile == null
-                || !StringUtils.hasLength(multipartFile.getOriginalFilename())) {
+        if (multipartFile == null || !StringUtils.hasLength(multipartFile
+                .getOriginalFilename())) {
             return true;
         }
         return "jpg".equals(FilenameUtils.getExtension(multipartFile

@@ -30,6 +30,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.WebDriverRunner;
+
+import io.github.bonigarcia.wdm.FirefoxDriverManager;
 import jp.co.ntt.atrs.app.bean.PublicCustomerBean;
 import jp.co.ntt.atrs.app.page.TopPage;
 import jp.co.ntt.atrs.domain.model.Gender;
@@ -46,8 +50,17 @@ public class TicketReserveTest extends TestCase {
     @Value("${testdata.path}")
     private String testdataPath;
 
+    @Value("${target.geckodriverVersion}")
+    private String geckodriverVersion;
+
     @Before
     public void setUp() {
+        // 生成するドライバのインスタンスを取得
+        if (System.getProperty("webdriver.gecko.driver") == null) {
+            FirefoxDriverManager.getInstance().version(geckodriverVersion)
+                    .setup();
+        }
+        Configuration.browser = WebDriverRunner.MARIONETTE;
     }
 
     @After
@@ -105,13 +118,10 @@ public class TicketReserveTest extends TestCase {
         // テスト実行
         open(applicationContextUrl, TopPage.class).searchFlight("大阪(伊丹)")
                 .selectRoundTripFlightOutward()
-                .toHomewardFrightSearchResultPage()
-                .moveToNextDay()
+                .toHomewardFrightSearchResultPage().moveToNextDay()
                 .selectRoundTripFlightHomeward()
-                .toFlightReserveFormPageAsThePublic()
-                .setCustomerInfo(customer)
-                .toFlightReserveConfirmPage()
-                .toFlightReserveCompletePage();
+                .toFlightReserveFormPageAsThePublic().setCustomerInfo(customer)
+                .toFlightReserveConfirmPage().toFlightReserveCompletePage();
 
         // 証跡の取得
         screenshot("reserveRoundTripTicketByThePublicTest");

@@ -21,12 +21,11 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 
 /**
  * DynamoDB ファクトリクラス
- * 
  * @author NTT 電電太郎
- *
  */
 public class DynamoDBClientFactory {
     public static AmazonDynamoDB create(String region) {
-        return AmazonDynamoDBClientBuilder.standard().withRegion(region).build();
+        return AmazonDynamoDBClientBuilder.standard().withRegion(region)
+                .build();
     }
 }

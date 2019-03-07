@@ -30,7 +30,8 @@ import jp.co.ntt.atrs.domain.common.shard.datasource.model.DatabaseProperties;
  * データソースキーのリゾルバ。
  * @author NTT 電電花子
  */
-public class DataSourceKeyResolver implements ShardKeyResolver, InitializingBean {
+public class DataSourceKeyResolver implements ShardKeyResolver,
+                                   InitializingBean {
 
     /**
      * デフォルトスキーマ名。<br>
@@ -61,12 +62,12 @@ public class DataSourceKeyResolver implements ShardKeyResolver, InitializingBean
      * シャード用データソースキーのリストを作成する。
      */
     @Override
-    public void afterPropertiesSet() throws Exception  {
+    public void afterPropertiesSet() throws Exception {
         this.dataSources = new ArrayList<>();
         for (Map<String, String> dataSource : this.databaseProperties
                 .getDataSources()) {
-            if (!databaseDefaultSchemaName.equals(dataSource
-                    .get(ShardKeyResolver.SCHEMA_KEY_NAME))) {
+            if (!databaseDefaultSchemaName.equals(dataSource.get(
+                    ShardKeyResolver.SCHEMA_KEY_NAME))) {
                 this.dataSources.add(dataSource);
             }
         }
@@ -74,8 +75,7 @@ public class DataSourceKeyResolver implements ShardKeyResolver, InitializingBean
 
     /**
      * 引数のシャードキー(お客様番号)を元にシャードの割り当てをする。<br>
-     * お客様番号をシャード用データソースキーのリストサイズで除算した余りをインデックスとして、
-     * シャード用データソースキーのリストからデータソースキーを取得し返却する。
+     * お客様番号をシャード用データソースキーのリストサイズで除算した余りをインデックスとして、 シャード用データソースキーのリストからデータソースキーを取得し返却する。
      */
     @Override
     public String resolveShardKey(String shardKey) {

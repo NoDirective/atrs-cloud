@@ -25,7 +25,7 @@ import javax.inject.Inject;
 import javax.validation.groups.Default;
 
 import org.apache.commons.io.FilenameUtils;
-import org.dozer.Mapper;
+import com.github.dozermapper.core.Mapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -140,7 +140,8 @@ public class MemberUpdateController {
      * @throws IOException
      */
     @RequestMapping(method = RequestMethod.GET, params = "showDetail")
-    public String updateShowDetail(Model model, Principal principal) throws IOException {
+    public String updateShowDetail(Model model,
+            Principal principal) throws IOException {
 
         // ログインユーザ情報からCustomerNoを取得
         String customerNo = principal.getName();
@@ -161,7 +162,8 @@ public class MemberUpdateController {
      * @throws IOException
      */
     @RequestMapping(method = RequestMethod.GET, params = "form")
-    public String updateForm(Model model, Principal principal) throws IOException {
+    public String updateForm(Model model,
+            Principal principal) throws IOException {
 
         // ログインユーザ情報からCustomerNoを取得
         String customerNo = principal.getName();
@@ -191,7 +193,8 @@ public class MemberUpdateController {
     @RequestMapping(method = RequestMethod.POST, params = "confirm")
     public String updateConfirm(@Validated({ UploadFileNotRequired.class,
             Default.class }) MemberUpdateForm memberUpdateForm,
-            BindingResult result, Principal principal, Model model) throws IllegalStateException, IOException {
+            BindingResult result, Principal principal,
+            Model model) throws IllegalStateException, IOException {
 
         if (result.hasErrors()) {
             return updateRedo(memberUpdateForm, model);
@@ -259,10 +262,11 @@ public class MemberUpdateController {
      * @throws IOException
      */
     @RequestMapping(method = RequestMethod.POST)
-    public String update(
-            @Validated({ UploadFileUncheck.class, Default.class }) MemberUpdateForm memberUpdateForm,
+    public String update(@Validated({ UploadFileUncheck.class,
+            Default.class }) MemberUpdateForm memberUpdateForm,
             BindingResult result, Model model,
-            RedirectAttributes redirectAttributes, Principal principal) throws IOException {
+            RedirectAttributes redirectAttributes,
+            Principal principal) throws IOException {
 
         if (result.hasErrors()) {
             throw new BadRequestException(result);

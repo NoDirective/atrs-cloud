@@ -88,8 +88,8 @@ public class AtrsMailSender {
                 helper.setSubject(mail.getSubject());
 
                 // テンプレート解決
-                Template template = freemarkerConfiguration.getTemplate(
-                        mail.getTemplateFileName());
+                Template template = freemarkerConfiguration.getTemplate(mail
+                        .getTemplateFileName());
                 String text = FreeMarkerTemplateUtils.processTemplateIntoString(
                         template, mail.getModel());
 

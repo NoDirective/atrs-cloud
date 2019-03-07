@@ -30,7 +30,7 @@ import jp.co.ntt.atrs.domain.model.Reservation;
  */
 @Service
 public class ReservationInspectionServiceImpl implements
-                                             ReservationInspectionService {
+                                              ReservationInspectionService {
 
     /**
      * 2重受信チェックユーティリティ
@@ -62,6 +62,5 @@ public class ReservationInspectionServiceImpl implements
         // チケット予約完了をユーザに通知する
         reservationSharedService.notify(reservation);
     }
-
 
 }

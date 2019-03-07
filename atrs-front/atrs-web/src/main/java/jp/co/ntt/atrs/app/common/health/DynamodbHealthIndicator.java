@@ -49,8 +49,8 @@ public class DynamodbHealthIndicator extends AbstractHealthIndicator {
         }
         try {
             ListTablesResult listTablesResult = amazonDynamoDB.listTables();
-            builder.up().withDetail("amazonDynamoDB",
-                    listTablesResult.getTableNames());
+            builder.up().withDetail("amazonDynamoDB", listTablesResult
+                    .getTableNames());
         } catch (Exception e) {
             builder.down(e);
         }

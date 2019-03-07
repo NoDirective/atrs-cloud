@@ -24,7 +24,7 @@ import javax.inject.Inject;
 import javax.validation.groups.Default;
 
 import org.apache.commons.io.FilenameUtils;
-import org.dozer.Mapper;
+import com.github.dozermapper.core.Mapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -161,8 +161,8 @@ public class MemberRegisterController {
         // ファイル一時保存
         MultipartFile uploadFile = memberRegisterForm.getMemberForm()
                 .getPhoto();
-        String photoFileName = UUID.randomUUID().toString()
-                + FilenameUtils.getName(originalFilename);
+        String photoFileName = UUID.randomUUID().toString() + FilenameUtils
+                .getName(originalFilename);
         try (InputStream inputStream = uploadFile.getInputStream()) {
             s3Helper.fileUpload(inputStream, bucketName, tmpDirectory,
                     photoFileName);
@@ -204,8 +204,8 @@ public class MemberRegisterController {
      */
     @TransactionTokenCheck
     @RequestMapping(method = RequestMethod.POST)
-    public String register(
-            @Validated({ UploadFileUncheck.class, Default.class }) MemberRegisterForm memberRegisterForm,
+    public String register(@Validated({ UploadFileUncheck.class,
+            Default.class }) MemberRegisterForm memberRegisterForm,
             BindingResult result, Model model,
             RedirectAttributes redirectAttributes) throws IOException {
 
