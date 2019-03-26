@@ -27,8 +27,6 @@ management:
       show-details: ALWAYS
       # Enable only health endpoint
       enabled: true
-  security:
-    enabled: false
   health:
     s3:
       uri: ${spring.cloud.config.server.s3.uri}

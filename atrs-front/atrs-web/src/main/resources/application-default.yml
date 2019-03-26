@@ -1,4 +1,0 @@
-# Profile無しで起動した場合、localプロファイルと同等の設定とする
-spring:
-  profiles:
-    include: local

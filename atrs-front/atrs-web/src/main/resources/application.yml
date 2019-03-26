@@ -1,6 +1,8 @@
 # 環境依存しないフレームワークの設定値
 
 spring:
+  main:
+    allow-bean-definition-overriding: true
   application:
     name: atrs
   session:
@@ -17,6 +19,8 @@ cloud:
     credentials:
       accesskey: ${aws.access.key.id}
       secretkey: ${aws.secret.access.key}
+    stack:
+      auto: false
     # CloudWatch
     cloudwatch:
       namespace: ${spring.profiles.active:local}
@@ -34,8 +38,6 @@ management:
       show-details: ALWAYS
       # Enable only health endpoint
       enabled: true
-  security:
-    enabled: false
   health:
     dynamodb:
       enabled: true

@@ -16,14 +16,15 @@
  */
 package jp.co.ntt.atrs.app.page;
 
-import static com.codeborne.selenide.Condition.*;
-import static com.codeborne.selenide.Selenide.*;
-import static com.codeborne.selenide.Selectors.*;
+import static com.codeborne.selenide.Selenide.$;
 
+/**
+ * SelectFlightConfimページのページオブジェクトクラス。
+ */
 public class SelectFlightConfimPage {
 
     /**
-     * 復路の空席照会結果を表示する。
+     * 復路の空席照会結果ページを表示する。
      * @return FlightSearchResultPage 空席照会結果ページ
      */
     public FlightSearchResultPage toHomewardFrightSearchResultPage() {
@@ -32,24 +33,20 @@ public class SelectFlightConfimPage {
     }
 
     /**
-     * お客様情報入力フォームを表示する。
-     * @return FlightReserveFormPage お客様情報入力ページ
+     * お客様情報入力ページを表示する。
+     * @return ReserveFormPage お客様情報入力ページ
      */
-    public FlightReserveFormPage toFlightReserveFormPageAsUser() {
+    public ReserveFormPage toFlightReserveFormPageAsUser() {
         $(".forward").click();
-        // 遷移が完了したことを確認してPageを返す。
-        $(byId("content")).waitUntil(text("お客様情報入力"), 2000);
-        return new FlightReserveFormPage();
+        return new ReserveFormPage();
     }
 
     /**
-     * 未ログイン時に一般予約を選択し、お客様情報入力フォームを表示する。
-     * @return FlightReserveFormPage お客様情報入力ページ
+     * 未ログイン時に一般予約を選択しお客様情報入力ページを表示する。
+     * @return ReserveFormPage お客様情報入力ページ
      */
-    public FlightReserveFormPage toFlightReserveFormPageAsThePublic() {
+    public ReserveFormPage toFlightReserveFormPageAsThePublic() {
         $(".forward", 1).click();
-        // 遷移が完了したことを確認してPageを返す。
-        $(byId("content")).waitUntil(text("お客様情報入力"), 2000);
-        return new FlightReserveFormPage();
+        return new ReserveFormPage();
     }
 }

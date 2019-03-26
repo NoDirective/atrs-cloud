@@ -17,6 +17,7 @@
 package jp.co.ntt.atrs.app.common.boot;
 
 import org.springframework.boot.actuate.autoconfigure.metrics.web.servlet.WebMvcMetricsAutoConfiguration;
+import org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jmx.JmxAutoConfiguration;
@@ -33,7 +34,8 @@ import org.springframework.context.annotation.ImportResource;
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
         ElastiCacheAutoConfiguration.class, JmxAutoConfiguration.class,
         WebMvcAutoConfiguration.class, SecurityAutoConfiguration.class,
-        WebMvcMetricsAutoConfiguration.class })
+        WebMvcMetricsAutoConfiguration.class,
+        ManagementWebSecurityAutoConfiguration.class })
 public class Bootstrap extends SpringBootServletInitializer {
 
     @Override

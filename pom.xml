@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>jp.co.ntt.atrs.cloud.aws</groupId>
     <artifactId>atrs-parent</artifactId>
-    <version>1.1.0.RELEASE</version>
+    <version>1.1.1.RELEASE</version>
     <packaging>pom</packaging>
     <modules>
         <module>/atrs-common</module>
@@ -16,7 +16,7 @@
     <parent>
         <groupId>org.terasoluna.gfw</groupId>
         <artifactId>terasoluna-gfw-parent</artifactId>
-        <version>5.5.0.RC7</version>
+        <version>5.5.1.RELEASE</version>
         <relativePath />
     </parent>
     <name>AIRLINE TICKET RESERVATION SYSTEM Parent POM</name>
@@ -262,6 +262,18 @@
                 <version>${org.springframework.spring-jms.version}</version>
             </dependency>
             <!-- == End Jms == -->
+            <!-- == Begin jdk11 == -->
+            <dependency>
+                <groupId>com.sun.xml.bind</groupId>
+                <artifactId>jaxb-impl</artifactId>
+                <version>${jaxb-impl.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.xml.bind</groupId>
+                <artifactId>jaxb-core</artifactId>
+                <version>${jaxb-core.version}</version>
+            </dependency>
+            <!-- == End jdk11 == -->
         </dependencies>
     </dependencyManagement>
 
@@ -280,10 +292,12 @@
         <org.codehaus.mojo.build-helper-maven-plugin.version>1.9.1</org.codehaus.mojo.build-helper-maven-plugin.version>
         <!-- == Dependency Versions == -->
         <postgresql.version>42.2.4</postgresql.version>
-        <org.springframework.cloud.spring-cloud-dependencies.version>Finchley.SR1</org.springframework.cloud.spring-cloud-dependencies.version>
-        <org.springframework.spring-jms.version>4.3.14.RELEASE</org.springframework.spring-jms.version>
-        <com.amazonaws.amazon-sqs-java-messaging-lib.version>1.0.1</com.amazonaws.amazon-sqs-java-messaging-lib.version>
-        <org.springframework.data.dynamodb-dependencies.version>5.0.3</org.springframework.data.dynamodb-dependencies.version>
+        <org.springframework.cloud.spring-cloud-dependencies.version>Greenwich.RELEASE</org.springframework.cloud.spring-cloud-dependencies.version>
+        <org.springframework.spring-jms.version>4.3.21.RELEASE</org.springframework.spring-jms.version>
+        <com.amazonaws.amazon-sqs-java-messaging-lib.version>1.0.4</com.amazonaws.amazon-sqs-java-messaging-lib.version>
+        <org.springframework.data.dynamodb-dependencies.version>5.0.4</org.springframework.data.dynamodb-dependencies.version>
+        <jaxb-core.version>2.3.0.1</jaxb-core.version>
+        <jaxb-impl.version>2.3.2</jaxb-impl.version>
         <!-- == Project Properties == -->
         <encoding>UTF-8</encoding>
         <java-version>1.8</java-version>

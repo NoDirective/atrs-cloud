@@ -16,7 +16,6 @@
  */
 package jp.co.ntt.atrs.app.page;
 
-import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selectors.byId;
 import static com.codeborne.selenide.Selectors.byLinkText;
 import static com.codeborne.selenide.Selectors.byText;
@@ -24,9 +23,31 @@ import static com.codeborne.selenide.Selenide.$;
 
 import org.springframework.test.context.ContextConfiguration;
 
+import com.codeborne.selenide.SelenideElement;
+
+/**
+ * Topページのページオブジェクトクラス。
+ */
 @ContextConfiguration(locations = {
         "classpath:META-INF/spring/seleniumContext.xml" })
 public class TopPage {
+
+    private SelenideElement headerContent;
+
+    /**
+     * TopPageのコンストラクタ。
+     */
+    public TopPage() {
+        this.headerContent = $(byId("header-content"));
+    }
+
+    /**
+     * ログアウトボタンの要素を返却する。
+     * @return SelenideElement
+     */
+    public SelenideElement getHeaderContent() {
+        return headerContent;
+    }
 
     /**
      * 顧客番号とパスワードを使用してログインする。
@@ -38,8 +59,6 @@ public class TopPage {
         $(byId("headerCustomerNo")).setValue(userID);
         $(byId("headerPassword")).setValue(password);
         $(".button").click();
-        // ログインが完了したことを確認してPageを返す。
-        $(byId("header-content")).waitUntil(text("ログアウト"), 2000);
         return this;
     }
 
@@ -48,7 +67,7 @@ public class TopPage {
      * @return TopPage トップページ
      */
     public TopPage logout() {
-        $(byId("header-content")).$(".button").click();
+        headerContent.$(".button").click();
         $(".logout_forward").click();
         return this;
     }
@@ -58,40 +77,38 @@ public class TopPage {
      * @return boolean ログイン状態
      */
     public boolean isLoggedIn() {
-        if ($(byId("header-content")).$(byText("ログアウト")).exists()) {
+        if (headerContent.$(byText("ログアウト")).exists()) {
             return true;
         }
         return false;
     }
 
     /**
-     * ユーザ情報登録画面を表示する。
-     * @return UserRegisterPage ユーザ情報登録ページ
+     * ユーザ情報登録ページを表示する。
+     * @return MemberRegisterFormPage ユーザ情報登録ページ
      */
-    public UserRegisterPage toUserRegisterPage() {
+    public MemberRegisterFormPage toUserRegisterPage() {
         $(byLinkText("ユーザ情報登録")).click();
-        return new UserRegisterPage();
+        return new MemberRegisterFormPage();
     }
 
     /**
-     * ユーザ情報管理画面を表示する。
-     * @return UserDetailPage ユーザ情報管理ページ
+     * ユーザ情報管理ページを表示する。
+     * @return MemberDetailPage ユーザ情報管理ページ
      */
-    public UserDetailPage toUserDetailPage() {
+    public MemberDetailPage toUserDetailPage() {
         $(byLinkText("ユーザ情報管理")).click();
-        return new UserDetailPage();
+        return new MemberDetailPage();
     }
 
     /**
-     * 空席状況を照会する。
+     * 空席照会結果ページを表示する。
      * @param airport 空港名
      * @return FlightSearchResultPage 空席照会結果ページ
      */
     public FlightSearchResultPage searchFlight(String airport) {
         $(byId("flightSearchCriteriaForm.arrAirportCd")).selectOption(airport);
         $(".forward").click();
-        // 遷移が完了したことを確認してPageを返す。
-        $(byId("content")).waitUntil(text("空席照会結果"), 2000);
         return new FlightSearchResultPage();
     }
 }
