@@ -6,7 +6,7 @@
     <parent>
         <groupId>jp.co.ntt.atrs.cloud.aws</groupId>
         <artifactId>atrs-parent</artifactId>
-        <version>1.1.0.RELEASE</version>
+        <version>1.1.1.RELEASE</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -51,13 +51,13 @@
         <dependency>
             <groupId>com.codeborne</groupId>
             <artifactId>selenide</artifactId>
-            <version>4.4.2</version>
+            <version>4.14.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.github.bonigarcia</groupId>
             <artifactId>webdrivermanager</artifactId>
-            <version>1.6.2</version>
+            <version>3.1.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -113,7 +113,7 @@
     </dependencyManagement>
 
     <properties>
-        <selenium.version>3.0.1</selenium.version>
+        <selenium.version>3.14.0</selenium.version>
     </properties>
 
 </project>

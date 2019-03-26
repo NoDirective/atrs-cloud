@@ -20,6 +20,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.freemarker.FreeMarkerAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jmx.JmxAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.cloud.aws.autoconfigure.mail.MailSenderAutoConfiguration;
@@ -28,7 +29,7 @@ import org.springframework.context.annotation.ImportResource;
 @ImportResource("classpath:/META-INF/spring/applicationContext.xml")
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
         JmxAutoConfiguration.class, MailSenderAutoConfiguration.class,
-        FreeMarkerAutoConfiguration.class })
+        FreeMarkerAutoConfiguration.class, SecurityAutoConfiguration.class })
 public class Bootstrap extends SpringBootServletInitializer {
 
     @Override
