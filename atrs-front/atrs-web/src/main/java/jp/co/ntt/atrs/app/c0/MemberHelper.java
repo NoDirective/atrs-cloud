@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 NTT Corporation.
+ * Copyright(c) 2017 NTT Corporation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package jp.co.ntt.atrs.app.c0;
 
@@ -50,8 +49,9 @@ public class MemberHelper {
         Member member = beanMapper.map(memberForm, Member.class);
 
         // 誕生日
-        LocalDate dateOfBirth = new LocalDate(memberForm.getYearOfBirth(), memberForm
-                .getMonthOfBirth(), memberForm.getDayOfBirth());
+        LocalDate dateOfBirth = new LocalDate(memberForm
+                .getYearOfBirth(), memberForm.getMonthOfBirth(), memberForm
+                        .getDayOfBirth());
         member.setBirthday(dateOfBirth.toDate());
 
         // 電話番号
@@ -69,8 +69,8 @@ public class MemberHelper {
         member.setCreditType(ct);
 
         // クレジットカード期限
-        String creditTerm = memberForm.getCreditMonth() + "/"
-                + memberForm.getCreditYear();
+        String creditTerm = memberForm.getCreditMonth() + "/" + memberForm
+                .getCreditYear();
         member.setCreditTerm(creditTerm);
 
         return member;
@@ -98,8 +98,8 @@ public class MemberHelper {
         }
 
         // Zipcode
-        if (StringUtils.hasLength(member.getZipCode())
-                && member.getZipCode().length() >= 7) {
+        if (StringUtils.hasLength(member.getZipCode()) && member.getZipCode()
+                .length() >= 7) {
             memberForm.setZipCode1(member.getZipCode().substring(0, 3));
             memberForm.setZipCode2(member.getZipCode().substring(3, 7));
         }

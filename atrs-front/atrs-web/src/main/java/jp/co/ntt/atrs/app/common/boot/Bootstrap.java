@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 NTT Corporation.
+ * Copyright(c) 2017 NTT Corporation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,13 +12,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package jp.co.ntt.atrs.app.common.boot;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jmx.JmxAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
@@ -30,7 +30,7 @@ import org.springframework.context.annotation.ImportResource;
         "classpath:/META-INF/spring/spring-mvc.xml" })
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
         ElastiCacheAutoConfiguration.class, JmxAutoConfiguration.class,
-        WebMvcAutoConfiguration.class })
+        WebMvcAutoConfiguration.class, SecurityAutoConfiguration.class })
 public class Bootstrap extends SpringBootServletInitializer {
 
     @Override

@@ -13,7 +13,7 @@
 	- local		個人のPC環境
 	- dev		データベースがAWS
 	- ci		ci環境
-	- spstest	
+	- spstest	方式の環境
 * 個人のPC環境の例
 	- mvn sql:execute -P local
 	- mvn sql:execute -P local1

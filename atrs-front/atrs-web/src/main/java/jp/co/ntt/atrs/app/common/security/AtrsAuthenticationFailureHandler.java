@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 NTT Corporation.
+ * Copyright(c) 2017 NTT Corporation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package jp.co.ntt.atrs.app.common.security;
 
@@ -34,14 +33,15 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Component
 public class AtrsAuthenticationFailureHandler extends
-                                             SimpleUrlAuthenticationFailureHandler {
+                                              SimpleUrlAuthenticationFailureHandler {
 
     /**
      * {@inheritDoc}
      */
     @Override
     public void onAuthenticationFailure(HttpServletRequest request,
-            HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
+            HttpServletResponse response,
+            AuthenticationException exception) throws IOException, ServletException {
 
         // AuthenticationServiceExceptionの場合はシステム例外とする
         if (exception instanceof AuthenticationServiceException) {

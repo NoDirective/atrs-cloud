@@ -17,6 +17,8 @@ cloud:
     credentials:
       accesskey: ${aws.access.key.id}
       secretkey: ${aws.secret.access.key}
+    stack:
+      auto: false
     # CloudWatch
     cloudwatch:
       namespace: ${spring.profiles.active:local}

@@ -5,8 +5,6 @@ cloud:
     # AWS common
     region:
       auto: true
-    stack:
-      auto: false
     # DynamoDB
     dynamodb:
       # DynamoDBは同一テーブル名を使用しているため、環境毎にリージョン、もしくはAWSアカウントを切り替える。
@@ -87,14 +85,14 @@ spring:
 redis:
   session:
     cluster:
-      node1: cn-int-redis-cls.xxxx.clustercfg.apne1.cache.amazonaws.com:6379
+      node1: cn-int-redis-cls.XXXX.clustercfg.apne1.cache.amazonaws.com:6379
     maxTotal: 137
     maxIdle: 137
     maxWaitMillis: -1
     minIdle: 137
   cache:
     cluster:
-      node1: cn-int-redis-cls.xxxx.clustercfg.apne1.cache.amazonaws.com:6379 # please change redis endpoint for cache
+      node1: cn-int-redis-cls.XXXX.clustercfg.apne1.cache.amazonaws.com:6379 # please change redis endpoint for cache
     maxTotal: 137
     maxIdle: 137
     maxWaitMillis: -1

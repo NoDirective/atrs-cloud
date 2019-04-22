@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 NTT Corporation.
+ * Copyright(c) 2017 NTT Corporation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package jp.co.ntt.atrs.app.common.health;
 
@@ -49,8 +48,8 @@ public class DynamodbHealthIndicator extends AbstractHealthIndicator {
         }
         try {
             ListTablesResult listTablesResult = amazonDynamoDB.listTables();
-            builder.up().withDetail("amazonDynamoDB",
-                    listTablesResult.getTableNames());
+            builder.up().withDetail("amazonDynamoDB", listTablesResult
+                    .getTableNames());
         } catch (Exception e) {
             builder.down(e);
         }

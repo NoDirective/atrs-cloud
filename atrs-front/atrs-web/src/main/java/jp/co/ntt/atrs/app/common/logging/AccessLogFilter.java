@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 NTT Corporation.
+ * Copyright(c) 2017 NTT Corporation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package jp.co.ntt.atrs.app.common.logging;
 
@@ -37,15 +36,16 @@ public class AccessLogFilter extends OncePerRequestFilter {
     /**
      * ロガー。
      */
-    private static final Logger LOGGER = LoggerFactory
-            .getLogger(AccessLogFilter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(
+            AccessLogFilter.class);
 
     /**
      * {@inheritDoc}
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-            HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+            HttpServletResponse response,
+            FilterChain filterChain) throws ServletException, IOException {
 
         String logMessage = getLogMessage(request);
         LOGGER.info("ACCESS START {}", logMessage);
@@ -86,7 +86,8 @@ public class AccessLogFilter extends OncePerRequestFilter {
      * {@inheritDoc}
      */
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    protected boolean shouldNotFilter(
+            HttpServletRequest request) throws ServletException {
         if (!LOGGER.isInfoEnabled()) {
             return true;
         }

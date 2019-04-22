@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 NTT Corporation.
+ * Copyright(c) 2017 NTT Corporation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package jp.co.ntt.atrs.domain.service.c1;
 
@@ -115,21 +114,23 @@ public class MemberRegisterServiceImpl implements MemberRegisterService {
         // MyBatis3の機能(SelectKey)によりmemberにはcustomerNoが格納される。
         int insertMemberCount = memberRepository.insert(member);
         if (insertMemberCount != 1) {
-            throw new SystemException(LogMessages.E_AR_A0_L9002.getCode(), LogMessages.E_AR_A0_L9002
-                    .getMessage(insertMemberCount, 1));
+            throw new SystemException(LogMessages.E_AR_A0_L9002
+                    .getCode(), LogMessages.E_AR_A0_L9002.getMessage(
+                            insertMemberCount, 1));
         }
 
         int insertMemberLoginCount = memberRepository.insertMemberLogin(member);
         if (insertMemberLoginCount != 1) {
-            throw new SystemException(LogMessages.E_AR_A0_L9002.getCode(), LogMessages.E_AR_A0_L9002
-                    .getMessage(insertMemberLoginCount, 1));
+            throw new SystemException(LogMessages.E_AR_A0_L9002
+                    .getCode(), LogMessages.E_AR_A0_L9002.getMessage(
+                            insertMemberLoginCount, 1));
         }
 
         // シャードアカウント情報の保存を行う。
         ShardingAccount shardingAccount = new ShardingAccount();
         shardingAccount.setUserId(member.getCustomerNo());
-        shardingAccount.setDataSourceKey(shardKeyResolver
-                .resolveShardKey(member.getCustomerNo()));
+        shardingAccount.setDataSourceKey(shardKeyResolver.resolveShardKey(member
+                .getCustomerNo()));
         accountShardKeyRepository.save(shardingAccount);
 
         // ファイル保存を行う。
@@ -138,7 +139,8 @@ public class MemberRegisterServiceImpl implements MemberRegisterService {
         s3Helper.fileCopy(bucketName, tmpDirectory, member.getPhotoFileName(),
                 bucketName, saveDirectory, s3PhotoFileName);
 
-        s3Helper.fileDelete(bucketName, tmpDirectory, member.getPhotoFileName());
+        s3Helper.fileDelete(bucketName, tmpDirectory, member
+                .getPhotoFileName());
 
         // S3に保存した顔写真ファイル名をデータベースに登録する。
         member.setRegisteredPhotoFileName(s3PhotoFileName);

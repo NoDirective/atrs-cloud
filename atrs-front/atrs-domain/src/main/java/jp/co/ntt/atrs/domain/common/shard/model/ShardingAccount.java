@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 NTT Corporation.
+ * Copyright(c) 2017 NTT Corporation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 /**
  *
@@ -47,7 +46,6 @@ public class ShardingAccount implements Serializable {
 
     /**
      * ユーザIDを取得する。
-     *
      * @return userId
      */
 
@@ -57,7 +55,6 @@ public class ShardingAccount implements Serializable {
 
     /**
      * ユーザIDを設定する。
-     *
      * @param userId セットする userId
      */
     public void setUserId(String userId) {
@@ -66,7 +63,6 @@ public class ShardingAccount implements Serializable {
 
     /**
      * データソースのキーを取得する。
-     *
      * @return dataSourceKey
      */
     public String getDataSourceKey() {
@@ -75,7 +71,6 @@ public class ShardingAccount implements Serializable {
 
     /**
      * データソースのキーを設定する。
-     *
      * @param dataSourceKey セットする dataSourceKey
      */
     public void setDataSourceKey(String dataSourceKey) {
@@ -89,8 +84,8 @@ public class ShardingAccount implements Serializable {
     @Override
     public int hashCode() {
         int result = userId != null ? userId.hashCode() : 0;
-        result = 31 * result
-                + (dataSourceKey != null ? dataSourceKey.hashCode() : 0);
+        result = 31 * result + (dataSourceKey != null ? dataSourceKey.hashCode()
+                : 0);
         return result;
     }
 

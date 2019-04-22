@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 NTT Corporation.
+ * Copyright(c) 2017 NTT Corporation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package jp.co.ntt.atrs.app.c2;
 
@@ -140,7 +139,8 @@ public class MemberUpdateController {
      * @throws IOException
      */
     @RequestMapping(method = RequestMethod.GET, params = "showDetail")
-    public String updateShowDetail(Model model, Principal principal) throws IOException {
+    public String updateShowDetail(Model model,
+            Principal principal) throws IOException {
 
         // ログインユーザ情報からCustomerNoを取得
         String customerNo = principal.getName();
@@ -161,7 +161,8 @@ public class MemberUpdateController {
      * @throws IOException
      */
     @RequestMapping(method = RequestMethod.GET, params = "form")
-    public String updateForm(Model model, Principal principal) throws IOException {
+    public String updateForm(Model model,
+            Principal principal) throws IOException {
 
         // ログインユーザ情報からCustomerNoを取得
         String customerNo = principal.getName();
@@ -191,7 +192,8 @@ public class MemberUpdateController {
     @RequestMapping(method = RequestMethod.POST, params = "confirm")
     public String updateConfirm(@Validated({ UploadFileNotRequired.class,
             Default.class }) MemberUpdateForm memberUpdateForm,
-            BindingResult result, Principal principal, Model model) throws IllegalStateException, IOException {
+            BindingResult result, Principal principal,
+            Model model) throws IllegalStateException, IOException {
 
         if (result.hasErrors()) {
             return updateRedo(memberUpdateForm, model);
@@ -259,10 +261,11 @@ public class MemberUpdateController {
      * @throws IOException
      */
     @RequestMapping(method = RequestMethod.POST)
-    public String update(
-            @Validated({ UploadFileUncheck.class, Default.class }) MemberUpdateForm memberUpdateForm,
+    public String update(@Validated({ UploadFileUncheck.class,
+            Default.class }) MemberUpdateForm memberUpdateForm,
             BindingResult result, Model model,
-            RedirectAttributes redirectAttributes, Principal principal) throws IOException {
+            RedirectAttributes redirectAttributes,
+            Principal principal) throws IOException {
 
         if (result.hasErrors()) {
             throw new BadRequestException(result);

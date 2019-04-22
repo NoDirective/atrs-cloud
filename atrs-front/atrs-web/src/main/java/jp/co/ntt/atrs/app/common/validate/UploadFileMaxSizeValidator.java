@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 NTT Corporation.
+ * Copyright(c) 2017 NTT Corporation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package jp.co.ntt.atrs.app.common.validate;
 
@@ -25,9 +24,8 @@ import org.springframework.web.multipart.MultipartFile;
  * ファイル最大サイズチェックアノテーション実装クラス
  * @author NTT 電電太郎
  */
-public class UploadFileMaxSizeValidator
-                                       implements
-                                       ConstraintValidator<UploadFileMaxSize, MultipartFile> {
+public class UploadFileMaxSizeValidator implements
+                                        ConstraintValidator<UploadFileMaxSize, MultipartFile> {
 
     /**
      * ファイル最大サイズチェックアノテーション

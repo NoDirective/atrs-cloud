@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 NTT Corporation.
+ * Copyright(c) 2017 NTT Corporation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package jp.co.ntt.atrs.app.b2;
 
@@ -108,16 +107,15 @@ public class TicketReserveController {
             Model model) {
 
         // 選択フライト情報リストを作成する。
-        List<Flight> flightList = ticketHelper
-                .createFlightList(ticketReserveSelectFlightForm
-                        .getSelectFlightFormList());
+        List<Flight> flightList = ticketHelper.createFlightList(
+                ticketReserveSelectFlightForm.getSelectFlightFormList());
         List<SelectFlightDto> selectFlightDtoList = ticketReserveHelper
                 .createSelectFlightDtoList(flightList);
 
         // 出力DTOを作成する。
         SelectFlightConfirmOutputDto selectFlightConfirmOutPutDto = new SelectFlightConfirmOutputDto();
-        selectFlightConfirmOutPutDto
-                .setSelectFlightDtoList(selectFlightDtoList);
+        selectFlightConfirmOutPutDto.setSelectFlightDtoList(
+                selectFlightDtoList);
         selectFlightConfirmOutPutDto.setHasHomeward(ticketReserveHelper
                 .hasHomeward(selectFlightDtoList));
 
@@ -140,12 +138,11 @@ public class TicketReserveController {
             TicketReserveForm ticketReserveForm,
             @AuthenticationPrincipal AtrsUserDetails userDetails, Model model) {
 
-        List<Flight> flightList = ticketHelper
-                .createFlightList(ticketReserveSelectFlightForm
-                        .getSelectFlightFormList());
+        List<Flight> flightList = ticketHelper.createFlightList(
+                ticketReserveSelectFlightForm.getSelectFlightFormList());
 
-        ticketReserveForm
-                .setOutwardLineSearchCriteriaForm(ticketReserveSelectFlightForm
+        ticketReserveForm.setOutwardLineSearchCriteriaForm(
+                ticketReserveSelectFlightForm
                         .getOutwardLineSearchCriteriaForm());
 
         ticketReserveForm.setSelectFlightFormList(ticketReserveSelectFlightForm
@@ -171,8 +168,8 @@ public class TicketReserveController {
     public String reserveRedo(TicketReserveForm ticketReserveForm,
             @AuthenticationPrincipal AtrsUserDetails userDetails, Model model) {
 
-        List<Flight> flightList = ticketHelper
-                .createFlightList(ticketReserveForm.getSelectFlightFormList());
+        List<Flight> flightList = ticketHelper.createFlightList(
+                ticketReserveForm.getSelectFlightFormList());
 
         ticketReserveHelper.prepareReservationForm(ticketReserveForm
                 .getReservationForm(), userDetails);
@@ -213,18 +210,18 @@ public class TicketReserveController {
      */
     @TransactionTokenCheck(type = TransactionTokenType.BEGIN)
     @RequestMapping(method = RequestMethod.POST, params = "confirm")
-    public String reserveConfirm(
-            @Validated TicketReserveForm ticketReserveForm,
+    public String reserveConfirm(@Validated TicketReserveForm ticketReserveForm,
             BindingResult result,
-            @AuthenticationPrincipal AtrsUserDetails userDetails, Model model) throws BadRequestException {
+            @AuthenticationPrincipal AtrsUserDetails userDetails,
+            Model model) throws BadRequestException {
 
         // 入力チェック
         if (result.hasErrors()) {
             return reserveRedo(ticketReserveForm, userDetails, model);
         }
 
-        List<Flight> flightList = ticketReserveHelper
-                .createFlightList(ticketReserveForm.getSelectFlightFormList());
+        List<Flight> flightList = ticketReserveHelper.createFlightList(
+                ticketReserveForm.getSelectFlightFormList());
 
         try {
             // チケットを予約確認をする。
@@ -263,14 +260,14 @@ public class TicketReserveController {
         }
 
         // 選択フライト情報フォームのリストからフライト情報リストを生成(同時に改竄チェックも行う)
-        List<Flight> flightList = ticketReserveHelper
-                .createFlightList(ticketReserveForm.getSelectFlightFormList());
+        List<Flight> flightList = ticketReserveHelper.createFlightList(
+                ticketReserveForm.getSelectFlightFormList());
 
         try {
             // チケットを予約する。
             ReserveCompleteOutputDto reserveCompleteOutputDto = ticketReserveHelper
-                    .reserve(ticketReserveForm.getReservationForm(),
-                            flightList, userDetails);
+                    .reserve(ticketReserveForm.getReservationForm(), flightList,
+                            userDetails);
             if (reserveCompleteOutputDto == null) {
                 ResultMessages messages = ResultMessages.error().add(
                         ResultMessage.fromCode(

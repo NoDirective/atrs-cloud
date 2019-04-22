@@ -65,19 +65,6 @@
         <dispatcher>FORWARD</dispatcher>
     </filter-mapping>
 
-     <!-- FIXME tilesのincludeを使用した際にセッションがうまくセットできない問題への暫定対処 ( issue : https://github.com/spring-projects/spring-session/issues/571
-        ) -->
-    <filter>
-        <filter-name>sessionEnforcerFilter</filter-name>
-        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>sessionEnforcerFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>ERROR</dispatcher>
-    </filter-mapping>
-
     <filter>
         <filter-name>MultipartFilter</filter-name>
         <filter-class>org.springframework.web.multipart.support.MultipartFilter</filter-class>

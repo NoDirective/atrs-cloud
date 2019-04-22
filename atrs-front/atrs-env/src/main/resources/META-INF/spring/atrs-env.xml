@@ -75,7 +75,7 @@
     </beans>
 
     <!-- CacheManager with Redis -->
-    <beans profile="default,local,dev,ci,spstest,rediscache">
+    <beans profile="local,dev,ci,spstest,rediscache">
         <bean id="cacheManager" class="org.springframework.data.redis.cache.RedisCacheManager">
             <constructor-arg ref="redisTemplateForCache" />
         </bean>
@@ -107,7 +107,7 @@
         </bean>
     </beans>
 
-    <beans profile="default,local,dev">
+    <beans profile="local,dev">
         <bean id="jedisConnectionFactoryForCache"
             class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" p:host-name="${redis.cache.server}" p:port="${redis.cache.port}">
             <constructor-arg>
@@ -146,7 +146,7 @@
         </bean>
     </beans>
     
-    <beans profile="default,local,dev">
+    <beans profile="local,dev">
         <bean id="jedisConnectionFactoryForSession" primary="true"
             class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" p:host-name="${redis.session.server}" p:port="${redis.session.port}">
             <constructor-arg>

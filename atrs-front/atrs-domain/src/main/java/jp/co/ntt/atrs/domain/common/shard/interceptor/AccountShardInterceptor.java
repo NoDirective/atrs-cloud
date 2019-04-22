@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 NTT Corporation.
+ * Copyright(c) 2017 NTT Corporation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package jp.co.ntt.atrs.domain.common.shard.interceptor;
 
@@ -30,7 +29,7 @@ import jp.co.ntt.atrs.domain.common.shard.repository.AccountShardKeyRepository;
  * @author NTT 電電太郎
  */
 public class AccountShardInterceptor implements MethodInterceptor,
-                                    InitializingBean {
+                                     InitializingBean {
 
     /**
      * シャードアカウントのリポジトリー。
@@ -85,8 +84,8 @@ public class AccountShardInterceptor implements MethodInterceptor,
         String account = shardAccountHelper.getAccountValue(invocation);
         if (null != account) {
             // リポジトリ問い合わせ
-            ShardingAccount shardingAccount = accountShardKeyRepository
-                    .findOne(account);
+            ShardingAccount shardingAccount = accountShardKeyRepository.findOne(
+                    account);
             if (shardingAccount != null) {
                 // データソースキー取得
                 dataSourceKey = shardingAccount.getDataSourceKey();

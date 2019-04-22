@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 NTT Corporation.
+ * Copyright(c) 2017 NTT Corporation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package jp.co.ntt.atrs.domain.service.b1;
 
@@ -118,7 +117,8 @@ public class TicketSearchServiceImpl implements TicketSearchService {
      */
     @Override
     public TicketSearchResultDto searchFlight(
-            TicketSearchCriteriaDto searchCriteria, Pageable pageable) throws BusinessException {
+            TicketSearchCriteriaDto searchCriteria,
+            Pageable pageable) throws BusinessException {
         // 引数チェック
         Assert.notNull(searchCriteria, "searchCriteria must not be null");
         Assert.notNull(pageable, "pageable must not be null");
@@ -150,14 +150,15 @@ public class TicketSearchServiceImpl implements TicketSearchService {
         VacantSeatSearchCriteriaDto criteria;
         if (StringUtils.hasLength(depTime)) {
             criteria = new VacantSeatSearchCriteriaDto(depDate, DateTimeUtil
-                    .extractHourString(depTime), route, boardingClassCd, beforeDayNum);
+                    .extractHourString(
+                            depTime), route, boardingClassCd, beforeDayNum);
         } else {
             criteria = new VacantSeatSearchCriteriaDto(depDate, route, boardingClassCd, beforeDayNum);
         }
 
         // リポジトリから照会結果総件数を取得
-        int totalCount = flightRepository
-                .countByVacantSeatSearchCriteria(criteria);
+        int totalCount = flightRepository.countByVacantSeatSearchCriteria(
+                criteria);
 
         // 照会結果件数をチェック
         if (totalCount == 0) {
@@ -177,14 +178,14 @@ public class TicketSearchServiceImpl implements TicketSearchService {
             flight.setFareType(fareTypeProvider.getFareType(fareTypeCd));
             flight.setFlightMaster(flightMasterProvider.getFlightMaster(flight
                     .getFlightMaster().getFlightName()));
-            flight.setBoardingClass(boardingClassProvider
-                    .getBoardingClass(flight.getBoardingClass()
-                            .getBoardingClassCd()));
+            flight.setBoardingClass(boardingClassProvider.getBoardingClass(
+                    flight.getBoardingClass().getBoardingClassCd()));
             resultFareTypeSet.add(fareTypeCd);
         }
 
         // 照会結果に含まれていた運賃種別を表示順の昇順でソート
-        List<FareTypeCd> sortedFareTypeCdList = createSortedFareTypeCdList(resultFareTypeSet);
+        List<FareTypeCd> sortedFareTypeCdList = createSortedFareTypeCdList(
+                resultFareTypeSet);
 
         // 基本運賃の計算
         int basicFare = ticketSharedService.calculateBasicFare(route

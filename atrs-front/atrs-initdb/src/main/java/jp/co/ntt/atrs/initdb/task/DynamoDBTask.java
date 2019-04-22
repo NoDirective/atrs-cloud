@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 NTT Corporation.
+ * Copyright(c) 2017 NTT Corporation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package jp.co.ntt.atrs.initdb.task;
 
@@ -89,7 +88,8 @@ public class DynamoDBTask extends Task {
      * @param shardDataSourceKeys セットする shardDataSourceKeys
      */
     public void setShardDataSourceKeys(String shardDataSourceKeys) {
-        if (shardDataSourceKeys != null && shardDataSourceKeys.startsWith("${")) {
+        if (shardDataSourceKeys != null && shardDataSourceKeys.startsWith(
+                "${")) {
             shardDataSourceKeys = null;
         }
         this.shardDataSourceKeys = shardDataSourceKeys;
@@ -214,6 +214,7 @@ public class DynamoDBTask extends Task {
         }
         this.proxyPassword = proxyPassword;
     }
+
     /*
      * (非 Javadoc)
      * @see org.apache.tools.ant.Task#execute()
@@ -223,14 +224,12 @@ public class DynamoDBTask extends Task {
         try {
             validate();
 
-            System.out
-                    .println("*********************** DynanoDBを初期化します。Region="
-                            + region
-                            + " TableName="
-                            + tablename
-                            + " ***********************");
+            System.out.println("*********************** DynanoDBを初期化します。Region="
+                    + region + " TableName=" + tablename
+                    + " ***********************");
 
-            if (!StringUtils.isEmpty(proxyHost) && !StringUtils.isEmpty(proxyPort)) {
+            if (!StringUtils.isEmpty(proxyHost) && !StringUtils.isEmpty(
+                    proxyPort)) {
                 ClientConfiguration clientConfiguration = new ClientConfiguration();
                 clientConfiguration.setProtocol(Protocol.HTTPS);
                 clientConfiguration.setProxyHost(proxyHost);
@@ -253,16 +252,14 @@ public class DynamoDBTask extends Task {
             List<WriteRequest> writeRequests = getShardingAccounts();
             if (!writeRequests.isEmpty()) {
                 for (int i = 0; i < writeRequests.size(); i++) {
-                    requestItems
-                            .put(tablename, writeRequests.subList(i, i + 1));
+                    requestItems.put(tablename, writeRequests.subList(i, i
+                            + 1));
                     dynamoDBClient.batchWriteItem(requestItems);
                 }
             }
-            System.out
-                    .println("*********************** DynanoDBを初期化しました。Region="
-                            + region
-                            + " TableName="
-                            + tablename
+            System.out.println(
+                    "*********************** DynanoDBを初期化しました。Region=" + region
+                            + " TableName=" + tablename
                             + " ***********************");
         } catch (Exception e) {
             throw new BuildException("DynamoDB初期化処理が失敗しました。", e);
@@ -290,9 +287,10 @@ public class DynamoDBTask extends Task {
 
         CreateTableRequest request = new CreateTableRequest().withTableName(
                 tablename).withKeySchema(keySchema).withAttributeDefinitions(
-                attributeDefinitions).withProvisionedThroughput(
-                new ProvisionedThroughput().withReadCapacityUnits(5L)
-                        .withWriteCapacityUnits(5L));
+                        attributeDefinitions).withProvisionedThroughput(
+                                new ProvisionedThroughput()
+                                        .withReadCapacityUnits(5L)
+                                        .withWriteCapacityUnits(5L));
         Table table = dynamoDB.createTable(request);
         table.waitForActive();
     }
@@ -346,15 +344,27 @@ public class DynamoDBTask extends Task {
         } finally {
             // 結果セットをクローズ
             if (rset != null) {
-                rset.close();
+                try {
+                    rset.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
             // ステートメントをクローズ
             if (stmt != null) {
-                stmt.close();
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
             // 接続をクローズ
             if (conn != null) {
-                conn.close();
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
         }
         return requests;

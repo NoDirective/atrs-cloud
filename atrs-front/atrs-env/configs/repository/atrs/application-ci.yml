@@ -5,8 +5,6 @@ cloud:
     # AWS common
     region:
       auto: true
-    stack:
-      auto: false
     # DynamoDB
     dynamodb:
       # DynamoDBは同一テーブル名を使用しているため、環境毎にリージョン、もしくはAWSアカウントを切り替える。
@@ -46,14 +44,14 @@ database:
       name: default
   data-sources:
     - schema: default
-      dbInstanceIdentifier: atrs-ci-shard
+      dbInstanceIdentifier: atrs-ci-shard-1-0-x
       driverUrlOption: socketTimeout=120&connectTimeout=120
       # replicaRegionはキー[database.rdsRegion]に設定した値と違う場合に設定する。
       #replicaRegion: us-east-1
     - schema: atrs1
-      url: jdbc:postgresql://atrs-ci-shard1.XXXX.ap-northeast-1.rds.amazonaws.com:5432/atrs?socketTimeout=120&connectTimeout=120
+      url: jdbc:postgresql://atrs-ci-shard1-1-0-x.XXXX.ap-northeast-1.rds.amazonaws.com:5432/atrs?socketTimeout=120&connectTimeout=120
     - schema: atrs2
-      url: jdbc:postgresql://atrs-ci-shard2.XXXX.ap-northeast-1.rds.amazonaws.com:5432/atrs?socketTimeout=120&connectTimeout=120
+      url: jdbc:postgresql://atrs-ci-shard2-1-0-x.XXXX.ap-northeast-1.rds.amazonaws.com:5432/atrs?socketTimeout=120&connectTimeout=120
 
 # upload directories
 upload:
@@ -94,7 +92,7 @@ redis:
     minIdle: 0
   cache:
     cluster:
-      node1: atrs-ci-cache.xxxx.clustercfg.apne1.cache.amazonaws.com:6379
+      node1: atrs-ci-cache.XXXX.clustercfg.apne1.cache.amazonaws.com:6379
     maxTotal: 8
     maxIdle: 8
     maxWaitMillis: -1

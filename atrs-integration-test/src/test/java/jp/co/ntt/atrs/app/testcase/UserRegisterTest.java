@@ -1,21 +1,7 @@
 /*
- * Copyright 2014-2018 NTT Corporation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
+ * Copyright(c) 2017 NTT Corporation.
  */
 package jp.co.ntt.atrs.app.testcase;
-
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selectors.byId;
@@ -36,7 +22,6 @@ import jp.co.ntt.atrs.app.bean.MemberBean;
 import jp.co.ntt.atrs.app.page.TopPage;
 import jp.co.ntt.atrs.app.page.UserDetailPage;
 import jp.co.ntt.atrs.domain.model.Gender;
-
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -84,7 +69,7 @@ public class UserRegisterTest {
     public void tearDown() {
         // ログイン状態の場合ログアウトする。
         TopPage topPage = open(applicationContextUrl, TopPage.class);
-        if(topPage.isLoggedIn()){
+        if (topPage.isLoggedIn()) {
             topPage.logout();
         }
     }
@@ -100,9 +85,9 @@ public class UserRegisterTest {
 
         // ユーザ登録
         // テスト実行
-        open(applicationContextUrl, TopPage.class)
-        .toUserRegisterPage().setMemberInfo(member, imgPathW)
-        .toRegisterConfirmPage().registerUser();
+        open(applicationContextUrl, TopPage.class).toUserRegisterPage()
+                .setMemberInfo(member, imgPathW).toRegisterConfirmPage()
+                .registerUser();
 
         // 証跡の取得
         screenshot("registerAndUpdateUserTest" + "_Registered");
@@ -126,17 +111,13 @@ public class UserRegisterTest {
         member.setTel3("5678");
 
         // テスト実行
-        open(applicationContextUrl, TopPage.class)
-        .login(member.getUserId(), member.getPassword())
-        .toUserDetailPage();
+        open(applicationContextUrl, TopPage.class).login(member.getUserId(),
+                member.getPassword()).toUserDetailPage();
         // ユーザ情報更新前の証跡の取得
         screenshot("registerAndUpdateUserTest" + "_beforeUpdate");
         // ユーザ更新
-        page(UserDetailPage.class)
-        .toUserUpdatePage()
-        .setMemberInfo(member, imgPathB)
-        .toUpdateConfirmPage()
-        .updateUser();
+        page(UserDetailPage.class).toUserUpdatePage().setMemberInfo(member,
+                imgPathB).toUpdateConfirmPage().updateUser();
 
         // ユーザ情報更新後の証跡の取得
         screenshot("registerAndUpdateUserTest" + "_afterUpdate");

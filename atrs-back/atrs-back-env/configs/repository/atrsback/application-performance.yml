@@ -5,8 +5,6 @@ cloud:
     # AWS common
     region:
       auto: true
-    stack:
-      auto: false
     # SES
     ses:
       region: us-east-1

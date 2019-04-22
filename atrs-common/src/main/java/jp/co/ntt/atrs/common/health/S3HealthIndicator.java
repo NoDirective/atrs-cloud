@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 NTT Corporation.
+ * Copyright(c) 2017 NTT Corporation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package jp.co.ntt.atrs.common.health;
 
@@ -40,7 +39,9 @@ public class S3HealthIndicator extends AbstractHealthIndicator {
 
     /*
      * (非 Javadoc)
-     * @see org.springframework.boot.actuate.health.AbstractHealthIndicator#doHealthCheck(org.springframework.boot.actuate.health.Health.Builder)
+     * @see
+     * org.springframework.boot.actuate.health.AbstractHealthIndicator#doHealthCheck(org.springframework.boot.actuate.health.
+     * Health.Builder)
      */
     @Override
     protected void doHealthCheck(Builder builder) throws Exception {
@@ -50,8 +51,8 @@ public class S3HealthIndicator extends AbstractHealthIndicator {
         }
         try {
             String bucket = new AmazonS3URI(uri).getBucket();
-            builder.up().withDetail("uri", uri).withDetail("location",
-                    amazonS3.getBucketLocation(bucket));
+            builder.up().withDetail("uri", uri).withDetail("location", amazonS3
+                    .getBucketLocation(bucket));
         } catch (Exception e) {
             builder.down(e);
         }

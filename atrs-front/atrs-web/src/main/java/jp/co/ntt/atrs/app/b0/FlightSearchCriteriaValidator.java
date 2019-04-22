@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 NTT Corporation.
+ * Copyright(c) 2017 NTT Corporation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package jp.co.ntt.atrs.app.b0;
 
@@ -64,8 +63,8 @@ public class FlightSearchCriteriaValidator implements Validator {
         FlightSearchCriteriaForm flightSearchCriteriaForm = (FlightSearchCriteriaForm) target;
 
         // 出発空港と到着空港が同じでないかチェックする。
-        if (!errors.hasFieldErrors("depAirportCd")
-                && !errors.hasFieldErrors("arrAirportCd")) {
+        if (!errors.hasFieldErrors("depAirportCd") && !errors.hasFieldErrors(
+                "arrAirportCd")) {
             String depAirport = flightSearchCriteriaForm.getDepAirportCd();
             String arrAirport = flightSearchCriteriaForm.getArrAirportCd();
             if (depAirport.equals(arrAirport)) {
@@ -79,10 +78,9 @@ public class FlightSearchCriteriaValidator implements Validator {
             int depDay = flightSearchCriteriaForm.getDay();
             int depYear = ticketHelper.getDepYear(depMonth);
             if (!DateTimeUtil.isValidDate(depYear, depMonth, depDay)) {
-                errors.rejectValue(
-                        "day",
-                        CommonErrorCode.E_AR_FW_5001.code(),
-                        new Object[] { new DefaultMessageSourceResolvable("flightSearchCriteriaForm.day") },
+                errors.rejectValue("day", CommonErrorCode.E_AR_FW_5001.code(),
+                        new Object[] {
+                                new DefaultMessageSourceResolvable("flightSearchCriteriaForm.day") },
                         null);
             }
         }

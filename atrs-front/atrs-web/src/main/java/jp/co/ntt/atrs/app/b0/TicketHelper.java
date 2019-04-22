@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 NTT Corporation.
+ * Copyright(c) 2017 NTT Corporation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package jp.co.ntt.atrs.app.b0;
 
@@ -85,12 +84,12 @@ public class TicketHelper {
         for (SelectFlightForm selectFlightForm : selectFlightFormList) {
             Flight flight = new Flight();
             flight.setDepartureDate(selectFlightForm.getDepartureDate());
-            flight.setFlightMaster(flightMasterProvider
-                    .getFlightMaster(selectFlightForm.getFlightName()));
+            flight.setFlightMaster(flightMasterProvider.getFlightMaster(
+                    selectFlightForm.getFlightName()));
             flight.setFareType(fareTypeProvider.getFareType(selectFlightForm
                     .getFareTypeCd()));
-            flight.setBoardingClass(boardingClassProvider
-                    .getBoardingClass(selectFlightForm.getBoardingClassCd()));
+            flight.setBoardingClass(boardingClassProvider.getBoardingClass(
+                    selectFlightForm.getBoardingClassCd()));
             flightList.add(flight);
         }
 
@@ -106,7 +105,8 @@ public class TicketHelper {
      * @throws BusinessException 業務例外
      * @throws BadRequestException 不正リクエスト例外
      */
-    public void validateFlightList(List<Flight> flightList) throws BusinessException, BadRequestException {
+    public void validateFlightList(
+            List<Flight> flightList) throws BusinessException, BadRequestException {
 
         // 改竄チェック
         validateFlightListForFalsification(flightList);
@@ -150,8 +150,8 @@ public class TicketHelper {
         if (flightList.size() == 2) {
             FareTypeCd outwardFareTypeCd = flightList.get(0).getFareType()
                     .getFareTypeCd();
-            if (!FareTypeCd.RT.equals(outwardFareTypeCd)
-                    && !FareTypeCd.SRT.equals(outwardFareTypeCd)) {
+            if (!FareTypeCd.RT.equals(outwardFareTypeCd) && !FareTypeCd.SRT
+                    .equals(outwardFareTypeCd)) {
                 throw new BadRequestException("fare Type of outward flight is invalid. fareTypeCd is "
                         + outwardFareTypeCd + ".");
             }

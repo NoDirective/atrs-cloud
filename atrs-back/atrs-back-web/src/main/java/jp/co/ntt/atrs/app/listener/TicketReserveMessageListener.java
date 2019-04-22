@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 NTT Corporation.
+ * Copyright(c) 2017 NTT Corporation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package jp.co.ntt.atrs.app.listener;
 
@@ -48,11 +47,11 @@ public class TicketReserveMessageListener {
     public void receive(Reservation reservation,
             @Header(JmsHeaders.MESSAGE_ID) String messageId) {
 
-        try{
+        try {
             // 予約審査を実施
             reservationInspectionService.inspectAndNotify(reservation,
                     messageId);
-        }catch(DuplicateReceivingException e){
+        } catch (DuplicateReceivingException e) {
             // 2重受信の場合は処理をスキップする。
             return;
         }

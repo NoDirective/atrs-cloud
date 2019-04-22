@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>jp.co.ntt.atrs.cloud.aws</groupId>
     <artifactId>atrs-parent</artifactId>
-    <version>1.0.1.RELEASE</version>
+    <version>1.0.2.RELEASE</version>
     <packaging>pom</packaging>
     <modules>
         <module>/atrs-common</module>
@@ -16,7 +16,7 @@
     <parent>
         <groupId>org.terasoluna.gfw</groupId>
         <artifactId>terasoluna-gfw-parent</artifactId>
-        <version>5.4.1.RELEASE</version>
+        <version>5.4.2.RELEASE</version>
         <relativePath />
     </parent>
     <name>AIRLINE TICKET RESERVATION SYSTEM Parent POM</name>
@@ -168,7 +168,7 @@
                     <configuration>
                         <configFile>${project.root.basedir}/eclipse/formatter.xml
                         </configFile>
-                        <lineEnding>CRLF</lineEnding>
+                        <lineEnding>LF</lineEnding>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -255,6 +255,20 @@
                 <version>${org.springframework.data.dynamodb-dependencies.version}</version>
             </dependency>
             <!-- == End DynamoDB == -->
+            <!-- == Begin spring-cloud-config-server (CVE-2019-3799) == -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-config-server</artifactId>
+                <version>${org.springframework.cloud.spring-cloud-config-server.version}</version>
+            </dependency>
+            <!-- == End spring-cloud-config-server (CVE-2019-3799) == -->
+            <!-- == Begin spring-cloud-config-client (CVE-2019-3799) == -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-config-client</artifactId>
+                <version>${org.springframework.cloud.spring-cloud-config-client.version}</version>
+            </dependency>
+            <!-- == End spring-cloud-config-client (CVE-2019-3799) == -->
         </dependencies>
     </dependencyManagement>
 
@@ -272,10 +286,12 @@
         <org.codehaus.mojo.version>2.5</org.codehaus.mojo.version>
         <org.codehaus.mojo.build-helper-maven-plugin.version>1.9.1</org.codehaus.mojo.build-helper-maven-plugin.version>
         <!-- == Dependency Versions == -->
-        <postgresql.version>9.4-1206-jdbc41</postgresql.version>
-        <org.springframework.cloud.spring-cloud-dependencies.version>Dalston.SR4</org.springframework.cloud.spring-cloud-dependencies.version>
+        <postgresql.version>42.2.5.jre7</postgresql.version>
+        <org.springframework.cloud.spring-cloud-dependencies.version>Dalston.SR5</org.springframework.cloud.spring-cloud-dependencies.version>
         <com.amazonaws.amazon-sqs-java-messaging-lib.version>1.0.1</com.amazonaws.amazon-sqs-java-messaging-lib.version>
         <org.springframework.data.dynamodb-dependencies.version>4.5.0</org.springframework.data.dynamodb-dependencies.version>
+        <org.springframework.cloud.spring-cloud-config-server.version>1.4.6.RELEASE</org.springframework.cloud.spring-cloud-config-server.version>
+        <org.springframework.cloud.spring-cloud-config-client.version>1.4.6.RELEASE</org.springframework.cloud.spring-cloud-config-client.version>
         <!-- == Project Properties == -->
         <encoding>UTF-8</encoding>
         <java-version>1.8</java-version>
